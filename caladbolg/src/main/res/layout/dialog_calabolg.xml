@@ -1,32 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="20dp">
-    <View
-        android:id="@+id/center_view"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerInParent="true"
-        />
 
-    <View android:id="@+id/color_showing_view"
-        android:background="@android:color/background_dark"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@id/center_view"/>
+    <LinearLayout android:id="@+id/container_color_indicater"
+        android:background="@drawable/bg_color_indicater_view_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp" >
+
+        <View android:id="@+id/view_color_indicater"
+            android:layout_width="@dimen/color_indicater_view_size"
+            android:layout_height="@dimen/color_indicater_view_size" />
+    </LinearLayout>
 
     <EditText android:id="@+id/edit_text_color_code"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@id/center_view"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/container_color_indicater"
+        android:layout_toRightOf="@id/container_color_indicater"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/transparent"
+        android:textColor="@color/color_code_text"
+        android:textSize="@dimen/color_code_text_size"
         android:inputType="none"/>
 
-    <SeekBar android:id="@+id/alpha_seek_bar"
+    <TextView android:id="@+id/text_color_code_params"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edit_text_color_code"
+        android:layout_alignLeft="@id/edit_text_color_code"
+        android:layout_marginLeft="10dp"
+        android:textColor="@color/color_code_params_text"
+        android:textSize="@dimen/color_code_params_text_size"
+        android:text="R:000 G:000 B:000 A:000"/>
+
+    <SeekBar android:id="@+id/seek_bar_alpha"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
@@ -34,11 +47,11 @@
         android:progress="255"
         android:max="255"/>
 
-    <com.caladbolg.ColorPickerView android:id="@+id/color_map_circle"
+    <com.caladbolg.ColorPickerView android:id="@+id/view_color_picker"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="10dp"
-        android:layout_below="@id/color_showing_view"
-        android:layout_above="@id/alpha_seek_bar" />
+        android:layout_below="@id/container_color_indicater"
+        android:layout_above="@id/seek_bar_alpha" />
 
 </RelativeLayout>
