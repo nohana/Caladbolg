@@ -1,0 +1,54 @@
+# build app files
+*.apk
+*.ap_
+
+# ignore crashlytics config
+com_crashlytics_export_strings.xml
+
+# Dalvik files
+*.dex
+
+# Java class files
+*.class
+
+# Generated files
+bin/
+gen/
+build/
+lint.xml
+proguard/
+
+# Local configs
+local.properties
+
+# roboelectric
+tmp/
+
+# Eclipse workspace
+.metadata/
+.checkstyle
+
+# intelli J
+.idea
+*.iml
+*.ipr
+*.iws
+
+# mac
+.Trashes
+.DS_Store
+
+# Win
+Thumbs.db
+
+# Vim
+*.swp
+
+#emacs
+*.*~
+
+# Keystore
+keystore.properties
+
+# Gradle
+.gradle
