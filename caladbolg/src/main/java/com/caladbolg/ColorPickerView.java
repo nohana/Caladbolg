@@ -10,6 +10,7 @@ import android.graphics.ComposeShader;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Path;
+import android.graphics.Path.Direction;
 import android.graphics.PorterDuff;
 import android.graphics.RadialGradient;
 import android.graphics.RectF;
@@ -25,13 +26,18 @@ public class ColorPickerView extends View {
     private RectF innerWheelRect;
 
     private int paramInnerPadding = 0;
-    private int paramOuterPadding = 2;
+    private int paramOuterPadding = 5;
     private int paramValueSliderWidth = 5; // width of the value slider
     private int paramColorCount = 20;
 
     private Paint colorPointerPaint;
     private Paint colorPointerOuterPaint;
     private Paint colorPointerDividerPaint;
+
+    private Path valuePointerPath;
+    private Path valuePointerOuterPath;
+    private Paint valuePointerOuterPaint;
+
     private int innerPadding;
     private int outerPadding;
     private int valueSliderWidth;
@@ -94,6 +100,13 @@ public class ColorPickerView extends View {
         valueSliderPaint.setDither(true);
 
         valueSliderPath = new Path();
+
+        valuePointerPath = new Path();
+        valuePointerOuterPath = new Path();
+        valuePointerOuterPaint = new Paint();
+        valuePointerOuterPaint.setStyle(Style.FILL_AND_STROKE);
+        valuePointerOuterPaint.setColor(Color.WHITE);
+        valuePointerOuterPaint.setAntiAlias(true);
     }
 
 
@@ -149,6 +162,10 @@ public class ColorPickerView extends View {
             valueSliderPath.arcTo(innerWheelRect, 180 + valueArcStartDegree - (paramColorCount - i - 1) * sweepAngleStep, -sweepAngleStep);
             canvas.drawPath(valueSliderPath, valueSliderPaint);
         }
+
+        // drawing color value slider selector
+        canvas.drawPath(valuePointerOuterPath, valuePointerOuterPaint);
+        canvas.drawPath(valuePointerPath, colorPointerPaint);
     }
 
     @Override
@@ -169,6 +186,20 @@ public class ColorPickerView extends View {
         innerWheelRect.set(centerX - innerWheelRadius, centerY - innerWheelRadius, centerX + innerWheelRadius, centerY + innerWheelRadius);
 
         colorWheelBitmap = createColorWheelBitmap(colorWheelRadius * 2, colorWheelRadius * 2);
+
+        int valuePointerHeight = (int) (2 * outerWheelRadius * Math.PI / (paramColorCount * 2));
+        int valuePointerOuterWidth = 5;
+        int valuePointerDividerWidth = 2;
+        int valuePointerRight = centerX - innerWheelRadius;
+        int valuePointerLeft = -valuePointerRight;
+        int valuePointerTop = centerY - valuePointerHeight / 2;
+        int valuePointerBottom = valuePointerTop + valuePointerHeight;
+
+        valuePointerPath.addRoundRect(new RectF(valuePointerLeft, valuePointerTop,
+                valuePointerRight, valuePointerBottom), valuePointerHeight / 2, valuePointerHeight / 2 , Direction.CCW);
+        valuePointerOuterPath.addRoundRect(new RectF(valuePointerLeft, valuePointerTop - valuePointerOuterWidth,
+                valuePointerRight + valuePointerOuterWidth, valuePointerBottom + valuePointerOuterWidth),
+                valuePointerHeight / 2 + valuePointerOuterWidth, valuePointerHeight / 2 + valuePointerOuterWidth, Direction.CCW);
     }
 
     private Bitmap createColorWheelBitmap(int width, int height) {
