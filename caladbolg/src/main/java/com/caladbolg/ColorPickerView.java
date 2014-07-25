@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ComposeShader;
 import android.graphics.Paint;
+import android.graphics.Paint.Style;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.RadialGradient;
@@ -28,6 +29,9 @@ public class ColorPickerView extends View {
     private int paramValueSliderWidth = 5; // width of the value slider
     private int paramColorCount = 20;
 
+    private Paint colorPointerPaint;
+    private Paint colorPointerOuterPaint;
+    private Paint colorPointerDividerPaint;
     private int innerPadding;
     private int outerPadding;
     private int valueSliderWidth;
@@ -62,6 +66,22 @@ public class ColorPickerView extends View {
     }
 
     private void init() {
+        colorPointerPaint = new Paint();
+        colorPointerPaint.setAntiAlias(true);
+        colorPointerPaint.setStyle(Style.FILL_AND_STROKE);
+
+        colorPointerOuterPaint = new Paint();
+        colorPointerOuterPaint.setStyle(Style.STROKE);
+        colorPointerOuterPaint.setStrokeWidth(7f);
+        colorPointerOuterPaint.setColor(Color.WHITE);
+        colorPointerOuterPaint.setAntiAlias(true);
+
+        colorPointerDividerPaint = new Paint();
+        colorPointerDividerPaint.setStyle(Style.STROKE);
+        colorPointerDividerPaint.setStrokeWidth(2f);
+        colorPointerDividerPaint.setColor(Color.GRAY);
+        colorPointerDividerPaint.setAntiAlias(true);
+
         colorWheelPaint = new Paint();
         colorWheelPaint.setAntiAlias(true);
         colorWheelPaint.setDither(true);
@@ -95,6 +115,19 @@ public class ColorPickerView extends View {
         // drawing color wheel
 
         canvas.drawBitmap(colorWheelBitmap, centerX - colorWheelRadius, centerY - colorWheelRadius, null);
+
+
+        // drawing color wheel pointer
+
+        float hueAngle = (float) Math.toRadians(colorHSV[0]);
+        float colorPointX = (float) ((-Math.cos(hueAngle) * colorHSV[1] * colorWheelRadius) + centerX);
+        float colorPointY = (float) ((-Math.sin(hueAngle) * colorHSV[1] * colorWheelRadius) + centerY);
+
+        float pointerRadius = 0.1f * colorWheelRadius;
+        colorPointerPaint.setColor(Color.HSVToColor(colorHSV));
+        canvas.drawCircle(colorPointX, colorPointY, pointerRadius, colorPointerPaint);
+        canvas.drawCircle(colorPointX, colorPointY, pointerRadius + 1f, colorPointerDividerPaint);
+        canvas.drawCircle(colorPointX, colorPointY, pointerRadius+7f, colorPointerOuterPaint);
 
         // drawing value slider
 
