@@ -5,10 +5,13 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 import com.caladbolg.Caladbolg;
+import com.caladbolg.Caladbolg.OnCancelPickColorListener;
+import com.caladbolg.Caladbolg.OnPickedColorListener;
 
 
-public class SampleActivity extends ActionBarActivity {
+public class SampleActivity extends ActionBarActivity implements OnPickedColorListener, OnCancelPickColorListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,5 +40,15 @@ public class SampleActivity extends ActionBarActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onCancelPickColor() {
+        Toast.makeText(this, "cancel", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onPickedColor(int rgb, int alpha) {
+        Toast.makeText(this, String.format("RGB:%d Alpha:%d", rgb, alpha), Toast.LENGTH_LONG).show();
     }
 }

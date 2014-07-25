@@ -1,8 +1,11 @@
 package com.caladbolg;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -19,7 +22,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import com.caladbolg.ColorPickerView.OnChangeColorListener;
 
-public class Caladbolg extends DialogFragment implements
+public class Caladbolg extends DialogFragment implements OnClickListener,
         OnSeekBarChangeListener, TextWatcher, OnChangeColorListener, OnKeyListener, OnFocusChangeListener {
     static final String KEY_INITIAL_COLOR = "key_initial_color";
 
@@ -31,6 +34,19 @@ public class Caladbolg extends DialogFragment implements
     private TextView colorCodeParamsText;
     private EditText colorCodeEdit;
     private ColorPickerView colorPickerView;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        if (activity instanceof OnPickedColorListener) {
+            onPickedColorListener = (OnPickedColorListener) activity;
+        }
+
+        if (activity instanceof OnCancelPickColorListener) {
+            onCancelPickColorListener = (OnCancelPickColorListener) activity;
+        }
+    }
 
     public static Caladbolg getInstance(int initialColor) {
         Bundle args = new Bundle();
@@ -63,6 +79,8 @@ public class Caladbolg extends DialogFragment implements
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(view);
+        builder.setPositiveButton(getActivity().getString(R.string.dialog_positive_btn), this);
+        builder.setNegativeButton(getActivity().getString(R.string.dialog_negative_btn), this);
 
         return builder.create();
     }
@@ -111,6 +129,7 @@ public class Caladbolg extends DialogFragment implements
     private int toRGB(int argb) {
         return argb & 0x00ffffff;
     }
+
     private int toARGB(String hexColorCode) {
         if (hexColorCode.startsWith("#")) hexColorCode = hexColorCode.substring(1);
         return (int) Long.parseLong(hexColorCode, 16);
@@ -167,5 +186,28 @@ public class Caladbolg extends DialogFragment implements
         if (v == colorCodeEdit) {
             colorCodeEdit.setTag(colorCodeEdit.getText().toString());
         }
+    }
+
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+        switch (which) {
+            case Dialog.BUTTON_POSITIVE :
+                if (onPickedColorListener != null) onPickedColorListener.onPickedColor(rgb, alpha);
+                break;
+            case Dialog.BUTTON_NEGATIVE :
+                if (onCancelPickColorListener != null) onCancelPickColorListener.onCancelPickColor();
+                break;
+        }
+    }
+
+    OnPickedColorListener onPickedColorListener;
+    OnCancelPickColorListener onCancelPickColorListener;
+
+    public interface OnPickedColorListener {
+        void onPickedColor(int rgb, int alpha);
+    }
+
+    public interface OnCancelPickColorListener {
+        void onCancelPickColor();
     }
 }
