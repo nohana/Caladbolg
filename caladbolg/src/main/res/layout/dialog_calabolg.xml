@@ -34,7 +34,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/edit_text_color_code"
         android:layout_alignLeft="@id/edit_text_color_code"
-        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"
         android:textColor="@color/color_code_params_text"
         android:textSize="@dimen/color_code_params_text_size"
         android:text="R:000 G:000 B:000 A:000"/>
