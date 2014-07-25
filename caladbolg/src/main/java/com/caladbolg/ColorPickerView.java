@@ -77,7 +77,7 @@ public class ColorPickerView extends View {
     public void setColor(int initialColor) {
         int rgb = initialColor & 0x00ffffff;
         Color.colorToHSV(rgb, colorHSV);
-        valueArcStartDegree = colorHSV[2] * 180;
+        valueArcStartDegree = (1f - colorHSV[2]) * 180f;
 
         invalidate();
     }
