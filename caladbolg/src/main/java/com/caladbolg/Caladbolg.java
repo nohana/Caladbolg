@@ -82,6 +82,7 @@ public class Caladbolg extends DialogFragment implements OnChangeColorListener, 
         colorCodeEdit.setText(getActivity().getString(R.string.color_fmt, toARGB(rgb, alpha)));
         colorCodeParamsText.setText(getActivity()
                 .getString(R.string.color_param_fmt, Color.red(rgb), Color.green(rgb), Color.blue(rgb), alpha));
+        colorCodeParamsText.requestFocus();
     }
 
     private String toHexColorCode(int rgb, int alpha) {
