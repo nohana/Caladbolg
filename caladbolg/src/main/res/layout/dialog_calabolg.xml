@@ -24,6 +24,7 @@
         android:layout_toRightOf="@id/container_color_indicater"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="10dp"
+        android:singleLine="true"
         android:background="@color/transparent"
         android:textColor="@color/color_code_text"
         android:textSize="@dimen/color_code_text_size"
