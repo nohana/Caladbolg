@@ -180,7 +180,25 @@ public class ColorPickerView extends View {
                 int dy = y - centerY;
                 double d = Math.sqrt(dx * dx + dy * dy);
 
-                if (d <= colorWheelRadius) {
+
+                if (isSlidingValue || (d <= outerWheelRadius && d >= innerWheelRadius)) {
+                    double degree = Math.toDegrees(Math.atan2(dy, dx));
+
+                    if (isSlidingValue) {
+                        float degreeDiff = (float) (degree - previousTouchDegree);
+                        valueArcStartDegree = (valueArcStartDegree + degreeDiff) % 360;
+                        if (valueArcStartDegree > 180) valueArcStartDegree = valueArcStartDegree - 360;
+                        if (valueArcStartDegree < -180) valueArcStartDegree = valueArcStartDegree + 360;
+                    }
+
+                    colorHSV[2] = 1f - Math.abs(valueArcStartDegree / 180);
+
+                    previousTouchDegree = degree;
+                    isSlidingValue = true;
+
+                    invalidate();
+                }
+                else if (d <= colorWheelRadius) {
                     colorHSV[0] = (float) (Math.toDegrees(Math.atan2(dy, dx)) + 180f);
                     colorHSV[1] = Math.max(0f, Math.min(1f, (float) (d / colorWheelRadius)));
 
@@ -188,6 +206,9 @@ public class ColorPickerView extends View {
                 }
 
                 return true;
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                isSlidingValue = false;
         }
         return super.onTouchEvent(event);
     }
