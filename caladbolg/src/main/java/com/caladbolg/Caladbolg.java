@@ -31,7 +31,7 @@ public class Caladbolg extends DialogFragment {
         alpha = Color.alpha(initialColor);
         rgb = initialColor - alpha;
 
-        View view = View.inflate(getActivity(), com.caladbolg.R.layout.dialog_calabolg, null);
+        View view = View.inflate(getActivity(), R.layout.dialog_calabolg, null);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(view);

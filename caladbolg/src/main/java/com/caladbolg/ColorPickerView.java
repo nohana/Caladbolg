@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ComposeShader;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.RadialGradient;
 import android.graphics.RectF;
@@ -20,16 +21,29 @@ public class ColorPickerView extends View {
     private Paint colorWheelPaint;
     private RectF outerWheelRect;
     private RectF innerWheelRect;
+
     private int paramInnerPadding = 0;
     private int paramOuterPadding = 2;
+    private int paramValueSliderWidth = 5; // width of the value slider
+    private int paramColorCount = 20;
+
     private int innerPadding;
     private int outerPadding;
     private int valueSliderWidth;
-    private int paramValueSliderWidth;
     private int outerWheelRadius;
     private int innerWheelRadius;
     private int colorWheelRadius;
     private Bitmap colorWheelBitmap;
+    private Paint valueSliderPaint;
+    private Path valueSliderPath;
+
+
+    /** Currently selected color */
+    private float[] colorHSV = new float[] { 0f, 0f, 1f };
+
+    private boolean isSlidingValue;
+    private float valueArcStartDegree = 0;
+    private double previousTouchDegree;
 
     public ColorPickerView(Context context) {
         super(context);
@@ -53,6 +67,12 @@ public class ColorPickerView extends View {
 
         outerWheelRect = new RectF();
         innerWheelRect = new RectF();
+
+        valueSliderPaint = new Paint();
+        valueSliderPaint.setAntiAlias(true);
+        valueSliderPaint.setDither(true);
+
+        valueSliderPath = new Path();
     }
 
 
@@ -74,6 +94,27 @@ public class ColorPickerView extends View {
         // drawing color wheel
 
         canvas.drawBitmap(colorWheelBitmap, centerX - colorWheelRadius, centerY - colorWheelRadius, null);
+
+        // drawing value slider
+
+        float[] hsv = new float[] { colorHSV[0], colorHSV[1], 1f };
+        float sweepAngleStep = 180f / paramColorCount;
+
+        for(int i = 0; i < paramColorCount; i++) {
+            hsv[2] = 1f / (paramColorCount-1) * i;
+            valueSliderPaint.setColor(Color.HSVToColor(hsv));
+            valueSliderPaint.setAntiAlias(true);
+
+            valueSliderPath.reset();
+            valueSliderPath.arcTo(outerWheelRect, valueArcStartDegree - i * sweepAngleStep, -sweepAngleStep);
+            valueSliderPath.arcTo(innerWheelRect, -180 + valueArcStartDegree + (paramColorCount - i - 1) * sweepAngleStep, sweepAngleStep);
+            canvas.drawPath(valueSliderPath, valueSliderPaint);
+
+            valueSliderPath.reset();
+            valueSliderPath.arcTo(outerWheelRect, valueArcStartDegree + i * sweepAngleStep, sweepAngleStep);
+            valueSliderPath.arcTo(innerWheelRect, 180 + valueArcStartDegree - (paramColorCount - i - 1) * sweepAngleStep, -sweepAngleStep);
+            canvas.drawPath(valueSliderPath, valueSliderPaint);
+        }
     }
 
     @Override
