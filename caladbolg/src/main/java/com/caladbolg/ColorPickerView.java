@@ -55,6 +55,7 @@ public class ColorPickerView extends View {
     private boolean isSlidingValue;
     private float valueArcStartDegree = 0;
     private double previousTouchDegree;
+    private OnChangeColorListener onChangeColorListener;
 
     public ColorPickerView(Context context) {
         super(context);
@@ -226,10 +227,9 @@ public class ColorPickerView extends View {
         canvas.drawCircle(width / 2, height / 2, colorWheelRadius, colorWheelPaint);
 
         return bitmap;
-
     }
 
-        @Override
+    @Override
     public boolean onTouchEvent(MotionEvent event) {
         int action = event.getAction();
         switch (action) {
@@ -257,6 +257,10 @@ public class ColorPickerView extends View {
 
                     colorHSV[2] = 1f - Math.abs(valueArcStartDegree / 180);
 
+                    int rgb = Color.HSVToColor(colorHSV);
+                    if (onChangeColorListener != null)
+                        onChangeColorListener.onChangeColor(rgb);
+
                     previousTouchDegree = degree;
                     isSlidingValue = true;
 
@@ -265,6 +269,10 @@ public class ColorPickerView extends View {
                 else if (d <= colorWheelRadius) {
                     colorHSV[0] = (float) (Math.toDegrees(Math.atan2(dy, dx)) + 180f);
                     colorHSV[1] = Math.max(0f, Math.min(1f, (float) (d / colorWheelRadius)));
+
+                    int rgb = Color.HSVToColor(colorHSV);
+                    if (onChangeColorListener != null)
+                        onChangeColorListener.onChangeColor(rgb);
 
                     invalidate();
                 }
@@ -275,5 +283,13 @@ public class ColorPickerView extends View {
                 isSlidingValue = false;
         }
         return super.onTouchEvent(event);
+    }
+
+    public void setOnChangeColor(OnChangeColorListener listener) {
+        this.onChangeColorListener = listener;
+    }
+
+    public interface OnChangeColorListener {
+        void onChangeColor(int rgb);
     }
 }
