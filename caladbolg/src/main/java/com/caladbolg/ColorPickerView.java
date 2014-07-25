@@ -21,43 +21,47 @@ import android.view.MotionEvent;
 import android.view.View;
 
 public class ColorPickerView extends View {
-    private Paint colorWheelPaint;
-    private RectF outerWheelRect;
-    private RectF innerWheelRect;
 
-    private int paramInnerPadding = 0;
-    private int paramOuterPadding = 4;
-    private int paramValueSliderWidth = 10; // width of the value slider
-    private int paramColorCount = 20;
 
-    private Paint colorPointerPaint;
-    private Paint colorPointerOuterPaint;
-    private Paint colorPointerDividerPaint;
+    private static final int mParamInnerPadding= 0;
+    private static final int mParamOuterPadding= 4;
+    private static final int mParamValueSliderWidth = 10; // width of the value slider
+    private static final int mParamColorCount = 20;
 
-    private Path valuePointerPath;
-    private Path valuePointerOuterPath;
-    private Path valuePointerDividerPath;
-    private Paint valuePointerOuterPaint;
-    private Paint valuePointerDividerPaint;
+    private int mInnerPadding;
+    private int mOuterPadding;
+    private int mValueSliderWidth;
 
-    private int innerPadding;
-    private int outerPadding;
-    private int valueSliderWidth;
-    private int outerWheelRadius;
-    private int innerWheelRadius;
-    private int colorWheelRadius;
-    private Bitmap colorWheelBitmap;
-    private Paint valueSliderPaint;
-    private Path valueSliderPath;
+    private int mOuterWheelRadius;
+    private int mInnerWheelRadius;
+    private int mColorWheelRadius;
 
+    private Paint mColorWheelPaint;
+    private RectF mOuterWheelRect;
+    private RectF mInnerWheelRect;
+
+    private Paint mColorPointerPaint;
+    private Paint mColorPointerOuterPaint;
+    private Paint mColorPointerDividerPaint;
+
+    private Path mValuePointerPath;
+    private Path mValuePointerOuterPath;
+    private Path mValuePointerDividerPath;
+    private Paint mValuePointerOuterPaint;
+    private Paint mValuePointerDividerPaint;
+
+    private Bitmap mColorWheelBitmap;
+    private Paint mValueSliderPaint;
+    private Path mValueSliderPath;
 
     /** Currently selected color */
-    private float[] colorHSV = new float[] { 0f, 0f, 1f };
+    private float[] mColorHSV = new float[] { 0f, 0f, 1f };
 
-    private boolean isSlidingValue;
-    private float valueArcStartDegree = 0;
-    private double previousTouchDegree;
-    private OnChangeColorListener onChangeColorListener;
+    private boolean mIsSlidingValue;
+    private float mValueArcStartDegree = 0;
+    private double mPreviousTouchDegree;
+
+    private OnChangeColorListener mOnChangeColorListener;
 
     public ColorPickerView(Context context) {
         super(context);
@@ -76,55 +80,55 @@ public class ColorPickerView extends View {
 
     public void setColor(int initialColor) {
         int rgb = initialColor & 0x00ffffff;
-        Color.colorToHSV(rgb, colorHSV);
-        valueArcStartDegree = (1f - colorHSV[2]) * 180f;
+        Color.colorToHSV(rgb, mColorHSV);
+        mValueArcStartDegree = (1f - mColorHSV[2]) * 180f;
 
         invalidate();
     }
 
     private void init() {
-        colorPointerPaint = new Paint();
-        colorPointerPaint.setAntiAlias(true);
-        colorPointerPaint.setStyle(Style.FILL_AND_STROKE);
+        mColorPointerPaint = new Paint();
+        mColorPointerPaint.setAntiAlias(true);
+        mColorPointerPaint.setStyle(Style.FILL_AND_STROKE);
 
-        colorPointerOuterPaint = new Paint();
-        colorPointerOuterPaint.setStyle(Style.STROKE);
-        colorPointerOuterPaint.setStrokeWidth(7f);
-        colorPointerOuterPaint.setColor(Color.WHITE);
-        colorPointerOuterPaint.setAntiAlias(true);
+        mColorPointerOuterPaint = new Paint();
+        mColorPointerOuterPaint.setStyle(Style.STROKE);
+        mColorPointerOuterPaint.setStrokeWidth(7f);
+        mColorPointerOuterPaint.setColor(Color.WHITE);
+        mColorPointerOuterPaint.setAntiAlias(true);
 
-        colorPointerDividerPaint = new Paint();
-        colorPointerDividerPaint.setStyle(Style.STROKE);
-        colorPointerDividerPaint.setStrokeWidth(2f);
-        colorPointerDividerPaint.setColor(Color.GRAY);
-        colorPointerDividerPaint.setAntiAlias(true);
+        mColorPointerDividerPaint = new Paint();
+        mColorPointerDividerPaint.setStyle(Style.STROKE);
+        mColorPointerDividerPaint.setStrokeWidth(2f);
+        mColorPointerDividerPaint.setColor(Color.GRAY);
+        mColorPointerDividerPaint.setAntiAlias(true);
 
-        colorWheelPaint = new Paint();
-        colorWheelPaint.setAntiAlias(true);
-        colorWheelPaint.setDither(true);
+        mColorWheelPaint = new Paint();
+        mColorWheelPaint.setAntiAlias(true);
+        mColorWheelPaint.setDither(true);
 
-        outerWheelRect = new RectF();
-        innerWheelRect = new RectF();
+        mOuterWheelRect = new RectF();
+        mInnerWheelRect = new RectF();
 
-        valueSliderPaint = new Paint();
-        valueSliderPaint.setAntiAlias(true);
-        valueSliderPaint.setDither(true);
+        mValueSliderPaint = new Paint();
+        mValueSliderPaint.setAntiAlias(true);
+        mValueSliderPaint.setDither(true);
 
-        valueSliderPath = new Path();
+        mValueSliderPath = new Path();
 
-        valuePointerPath = new Path();
-        valuePointerOuterPath = new Path();
-        valuePointerDividerPath = new Path();
+        mValuePointerPath = new Path();
+        mValuePointerOuterPath = new Path();
+        mValuePointerDividerPath = new Path();
 
-        valuePointerOuterPaint = new Paint();
-        valuePointerOuterPaint.setStyle(Style.FILL_AND_STROKE);
-        valuePointerOuterPaint.setColor(Color.WHITE);
-        valuePointerOuterPaint.setAntiAlias(true);
+        mValuePointerOuterPaint = new Paint();
+        mValuePointerOuterPaint.setStyle(Style.FILL_AND_STROKE);
+        mValuePointerOuterPaint.setColor(Color.WHITE);
+        mValuePointerOuterPaint.setAntiAlias(true);
 
-        valuePointerDividerPaint = new Paint();
-        valuePointerDividerPaint.setStyle(Style.FILL_AND_STROKE);
-        valuePointerDividerPaint.setColor(Color.GRAY);
-        valuePointerDividerPaint.setAntiAlias(true);
+        mValuePointerDividerPaint = new Paint();
+        mValuePointerDividerPaint.setStyle(Style.FILL_AND_STROKE);
+        mValuePointerDividerPaint.setColor(Color.GRAY);
+        mValuePointerDividerPaint.setAntiAlias(true);
     }
 
 
@@ -145,46 +149,46 @@ public class ColorPickerView extends View {
 
         // drawing color wheel
 
-        canvas.drawBitmap(colorWheelBitmap, centerX - colorWheelRadius, centerY - colorWheelRadius, null);
+        canvas.drawBitmap(mColorWheelBitmap, centerX - mColorWheelRadius, centerY - mColorWheelRadius, null);
 
 
         // drawing color wheel pointer
 
-        float hueAngle = (float) Math.toRadians(colorHSV[0]);
-        float colorPointX = (float) ((-Math.cos(hueAngle) * colorHSV[1] * colorWheelRadius) + centerX);
-        float colorPointY = (float) ((-Math.sin(hueAngle) * colorHSV[1] * colorWheelRadius) + centerY);
+        float hueAngle = (float) Math.toRadians(mColorHSV[0]);
+        float colorPointX = (float) ((-Math.cos(hueAngle) * mColorHSV[1] * mColorWheelRadius) + centerX);
+        float colorPointY = (float) ((-Math.sin(hueAngle) * mColorHSV[1] * mColorWheelRadius) + centerY);
 
-        float pointerRadius = 0.12f * colorWheelRadius;
-        colorPointerPaint.setColor(Color.HSVToColor(colorHSV));
-        canvas.drawCircle(colorPointX, colorPointY, pointerRadius, colorPointerPaint);
-        canvas.drawCircle(colorPointX, colorPointY, pointerRadius + 1f, colorPointerDividerPaint);
-        canvas.drawCircle(colorPointX, colorPointY, pointerRadius+7f, colorPointerOuterPaint);
+        float pointerRadius = 0.12f * mColorWheelRadius;
+        mColorPointerPaint.setColor(Color.HSVToColor(mColorHSV));
+        canvas.drawCircle(colorPointX, colorPointY, pointerRadius, mColorPointerPaint);
+        canvas.drawCircle(colorPointX, colorPointY, pointerRadius + 1f, mColorPointerDividerPaint);
+        canvas.drawCircle(colorPointX, colorPointY, pointerRadius+7f, mColorPointerOuterPaint);
 
         // drawing value slider
 
-        float[] hsv = new float[] { colorHSV[0], colorHSV[1], 1f };
-        float sweepAngleStep = 180f / paramColorCount;
+        float[] hsv = new float[] { mColorHSV[0], mColorHSV[1], 1f };
+        float sweepAngleStep = 180f / mParamColorCount;
 
-        for(int i = 0; i < paramColorCount; i++) {
-            hsv[2] = 1f / (paramColorCount-1) * i;
-            valueSliderPaint.setColor(Color.HSVToColor(hsv));
-            valueSliderPaint.setAntiAlias(true);
+        for(int i = 0; i < mParamColorCount; i++) {
+            hsv[2] = 1f / (mParamColorCount-1) * i;
+            mValueSliderPaint.setColor(Color.HSVToColor(hsv));
+            mValueSliderPaint.setAntiAlias(true);
 
-            valueSliderPath.reset();
-            valueSliderPath.arcTo(outerWheelRect, valueArcStartDegree - i * sweepAngleStep, -sweepAngleStep);
-            valueSliderPath.arcTo(innerWheelRect, -180 + valueArcStartDegree + (paramColorCount - i - 1) * sweepAngleStep, sweepAngleStep);
-            canvas.drawPath(valueSliderPath, valueSliderPaint);
+            mValueSliderPath.reset();
+            mValueSliderPath.arcTo(mOuterWheelRect, mValueArcStartDegree - i * sweepAngleStep, -sweepAngleStep);
+            mValueSliderPath.arcTo(mInnerWheelRect, -180 + mValueArcStartDegree + (mParamColorCount - i - 1) * sweepAngleStep, sweepAngleStep);
+            canvas.drawPath(mValueSliderPath, mValueSliderPaint);
 
-            valueSliderPath.reset();
-            valueSliderPath.arcTo(outerWheelRect, valueArcStartDegree + i * sweepAngleStep, sweepAngleStep);
-            valueSliderPath.arcTo(innerWheelRect, 180 + valueArcStartDegree - (paramColorCount - i - 1) * sweepAngleStep, -sweepAngleStep);
-            canvas.drawPath(valueSliderPath, valueSliderPaint);
+            mValueSliderPath.reset();
+            mValueSliderPath.arcTo(mOuterWheelRect, mValueArcStartDegree + i * sweepAngleStep, sweepAngleStep);
+            mValueSliderPath.arcTo(mInnerWheelRect, 180 + mValueArcStartDegree - (mParamColorCount - i - 1) * sweepAngleStep, -sweepAngleStep);
+            canvas.drawPath(mValueSliderPath, mValueSliderPaint);
         }
 
         // drawing color value slider selector
-        canvas.drawPath(valuePointerOuterPath, valuePointerOuterPaint);
-        canvas.drawPath(valuePointerDividerPath, valuePointerDividerPaint);
-        canvas.drawPath(valuePointerPath, colorPointerPaint);
+        canvas.drawPath(mValuePointerOuterPath, mValuePointerOuterPaint);
+        canvas.drawPath(mValuePointerDividerPath, mValuePointerDividerPaint);
+        canvas.drawPath(mValuePointerPath, mColorPointerPaint);
     }
 
     @Override
@@ -193,39 +197,39 @@ public class ColorPickerView extends View {
         int centerX = width / 2;
         int centerY = height / 2;
 
-        innerPadding = paramInnerPadding * width / 100;
-        outerPadding = paramOuterPadding * width / 100;
-        valueSliderWidth = paramValueSliderWidth * width / 100;
+        mInnerPadding = mParamInnerPadding* width / 100;
+        mOuterPadding = mParamOuterPadding* width / 100;
+        mValueSliderWidth = mParamValueSliderWidth * width / 100;
 
-        outerWheelRadius = width / 2 - outerPadding;
-        innerWheelRadius = outerWheelRadius - valueSliderWidth;
-        colorWheelRadius = innerWheelRadius - innerPadding;
+        mOuterWheelRadius = width / 2 - mOuterPadding;
+        mInnerWheelRadius = mOuterWheelRadius - mValueSliderWidth;
+        mColorWheelRadius = mInnerWheelRadius - mInnerPadding;
 
-        outerWheelRect.set(centerX - outerWheelRadius, centerY - outerWheelRadius, centerX + outerWheelRadius, centerY + outerWheelRadius);
-        innerWheelRect.set(centerX - innerWheelRadius, centerY - innerWheelRadius, centerX + innerWheelRadius, centerY + innerWheelRadius);
+        mOuterWheelRect.set(centerX - mOuterWheelRadius, centerY - mOuterWheelRadius, centerX + mOuterWheelRadius, centerY + mOuterWheelRadius);
+        mInnerWheelRect.set(centerX - mInnerWheelRadius, centerY - mInnerWheelRadius, centerX + mInnerWheelRadius, centerY + mInnerWheelRadius);
 
-        colorWheelBitmap = createColorWheelBitmap(colorWheelRadius * 2, colorWheelRadius * 2);
+        mColorWheelBitmap = createmColorWheelBitmap(mColorWheelRadius * 2, mColorWheelRadius * 2);
 
-        float valuePointerHeight = (float) (2 * outerWheelRadius * Math.PI / (paramColorCount * 2));
+        float valuePointerHeight = (float) (2 * mOuterWheelRadius * Math.PI / (mParamColorCount * 2));
         float valuePointerOuterWidth = Math.max(5f, valuePointerHeight / 10);
         float valuePointerDividerWidth = Math.max(2f, valuePointerOuterWidth / 10);
-        float valuePointerRight = centerX - ((outerWheelRadius + innerWheelRadius) / 2 + innerWheelRadius) / 2;
+        float valuePointerRight = centerX - ((mOuterWheelRadius + mInnerWheelRadius) / 2 + mInnerWheelRadius) / 2;
         float valuePointerLeft = -valuePointerRight;
         float valuePointerTop = centerY - valuePointerHeight / 2;
         float valuePointerBottom = valuePointerTop + valuePointerHeight;
 
-        valuePointerPath.addRoundRect(new RectF(valuePointerLeft, valuePointerTop,
+        mValuePointerPath.addRoundRect(new RectF(valuePointerLeft, valuePointerTop,
                 valuePointerRight, valuePointerBottom), valuePointerHeight / 2, valuePointerHeight / 2 , Direction.CCW);
-        valuePointerOuterPath.addRoundRect(new RectF(valuePointerLeft, valuePointerTop - valuePointerOuterWidth,
+        mValuePointerOuterPath.addRoundRect(new RectF(valuePointerLeft, valuePointerTop - valuePointerOuterWidth,
                 valuePointerRight + valuePointerOuterWidth, valuePointerBottom + valuePointerOuterWidth),
                 valuePointerHeight / 2 + valuePointerOuterWidth, valuePointerHeight / 2 + valuePointerOuterWidth, Direction.CCW);
-        valuePointerDividerPath.addRoundRect(new RectF(valuePointerLeft, valuePointerTop - valuePointerDividerWidth,
+        mValuePointerDividerPath.addRoundRect(new RectF(valuePointerLeft, valuePointerTop - valuePointerDividerWidth,
                         valuePointerRight + valuePointerDividerWidth, valuePointerBottom + valuePointerDividerWidth),
                 valuePointerHeight / 2 + valuePointerDividerWidth, valuePointerHeight / 2 + valuePointerDividerWidth, Direction.CCW
         );
     }
 
-    private Bitmap createColorWheelBitmap(int width, int height) {
+    private Bitmap createmColorWheelBitmap(int width, int height) {
 
         Bitmap bitmap = Bitmap.createBitmap(width, height, Config.ARGB_8888);
 
@@ -240,13 +244,13 @@ public class ColorPickerView extends View {
         colors[colorCount] = colors[0];
 
         SweepGradient sweepGradient = new SweepGradient(width / 2, height / 2, colors, null);
-        RadialGradient radialGradient = new RadialGradient(width / 2, height / 2, colorWheelRadius, 0xFFFFFFFF, 0x00FFFFFF, TileMode.CLAMP);
+        RadialGradient radialGradient = new RadialGradient(width / 2, height / 2, mColorWheelRadius, 0xFFFFFFFF, 0x00FFFFFF, TileMode.CLAMP);
         ComposeShader composeShader = new ComposeShader(sweepGradient, radialGradient, PorterDuff.Mode.SRC_OVER);
 
-        colorWheelPaint.setShader(composeShader);
+        mColorWheelPaint.setShader(composeShader);
 
         Canvas canvas = new Canvas(bitmap);
-        canvas.drawCircle(width / 2, height / 2, colorWheelRadius, colorWheelPaint);
+        canvas.drawCircle(width / 2, height / 2, mColorWheelRadius, mColorWheelPaint);
 
         return bitmap;
     }
@@ -267,34 +271,34 @@ public class ColorPickerView extends View {
                 double d = Math.sqrt(dx * dx + dy * dy);
 
 
-                if (isSlidingValue || (d <= outerWheelRadius && d >= innerWheelRadius)) {
+                if (mIsSlidingValue || (d <= mOuterWheelRadius && d >= mInnerWheelRadius)) {
                     double degree = Math.toDegrees(Math.atan2(dy, dx));
 
-                    if (isSlidingValue) {
-                        float degreeDiff = (float) (degree - previousTouchDegree);
-                        valueArcStartDegree = (valueArcStartDegree + degreeDiff) % 360;
-                        if (valueArcStartDegree > 180) valueArcStartDegree = valueArcStartDegree - 360;
-                        if (valueArcStartDegree < -180) valueArcStartDegree = valueArcStartDegree + 360;
+                    if (mIsSlidingValue) {
+                        float degreeDiff = (float) (degree - mPreviousTouchDegree);
+                        mValueArcStartDegree = (mValueArcStartDegree + degreeDiff) % 360;
+                        if (mValueArcStartDegree > 180) mValueArcStartDegree = mValueArcStartDegree - 360;
+                        if (mValueArcStartDegree < -180) mValueArcStartDegree = mValueArcStartDegree + 360;
                     }
 
-                    colorHSV[2] = 1f - Math.abs(valueArcStartDegree / 180);
+                    mColorHSV[2] = 1f - Math.abs(mValueArcStartDegree / 180);
 
-                    int rgb = Color.HSVToColor(colorHSV);
-                    if (onChangeColorListener != null)
-                        onChangeColorListener.onChangeColor(rgb);
+                    int rgb = Color.HSVToColor(mColorHSV);
+                    if (mOnChangeColorListener != null)
+                        mOnChangeColorListener.onChangeColor(rgb);
 
-                    previousTouchDegree = degree;
-                    isSlidingValue = true;
+                    mPreviousTouchDegree = degree;
+                    mIsSlidingValue = true;
 
                     invalidate();
                 }
-                else if (d <= colorWheelRadius) {
-                    colorHSV[0] = (float) (Math.toDegrees(Math.atan2(dy, dx)) + 180f);
-                    colorHSV[1] = Math.max(0f, Math.min(1f, (float) (d / colorWheelRadius)));
+                else if (d <= mColorWheelRadius) {
+                    mColorHSV[0] = (float) (Math.toDegrees(Math.atan2(dy, dx)) + 180f);
+                    mColorHSV[1] = Math.max(0f, Math.min(1f, (float) (d / mColorWheelRadius)));
 
-                    int rgb = Color.HSVToColor(colorHSV);
-                    if (onChangeColorListener != null)
-                        onChangeColorListener.onChangeColor(rgb);
+                    int rgb = Color.HSVToColor(mColorHSV);
+                    if (mOnChangeColorListener != null)
+                        mOnChangeColorListener.onChangeColor(rgb);
 
                     invalidate();
                 }
@@ -302,13 +306,13 @@ public class ColorPickerView extends View {
                 return true;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
-                isSlidingValue = false;
+                mIsSlidingValue = false;
         }
         return super.onTouchEvent(event);
     }
 
     public void setOnChangeColor(OnChangeColorListener listener) {
-        this.onChangeColorListener = listener;
+        this.mOnChangeColorListener = listener;
     }
 
     public interface OnChangeColorListener {

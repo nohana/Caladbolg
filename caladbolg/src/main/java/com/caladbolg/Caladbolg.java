@@ -1,7 +1,7 @@
 package com.caladbolg;
 
 import android.app.Activity;
-import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -24,27 +24,30 @@ import com.caladbolg.ColorPickerView.OnChangeColorListener;
 
 public class Caladbolg extends DialogFragment implements OnClickListener,
         OnSeekBarChangeListener, TextWatcher, OnChangeColorListener, OnKeyListener, OnFocusChangeListener {
-    static final String KEY_INITIAL_COLOR = "key_initial_color";
+    private static final String KEY_INITIAL_COLOR = "key_initial_color";
 
-    int rgb;
-    int alpha;
+    private int mRGB;
+    private int mAlpha;
 
-    private SeekBar alphaSeekBar;
-    private View colorIndicaterView;
-    private TextView colorCodeParamsText;
-    private EditText colorCodeEdit;
-    private ColorPickerView colorPickerView;
+    private SeekBar mAlphaSeekBar;
+    private View mColorIndicaterView;
+    private TextView mColorCodeParamsText;
+    private EditText mColorCodeEdit;
+    private ColorPickerView mColorPickerView;
+
+    private OnPickedColorListener mOnPickedColorListener;
+    private OnCancelPickColorListener mOnCancelPickColorListener;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
         if (activity instanceof OnPickedColorListener) {
-            onPickedColorListener = (OnPickedColorListener) activity;
+            mOnPickedColorListener = (OnPickedColorListener) activity;
         }
 
         if (activity instanceof OnCancelPickColorListener) {
-            onCancelPickColorListener = (OnCancelPickColorListener) activity;
+            mOnCancelPickColorListener = (OnCancelPickColorListener) activity;
         }
     }
 
@@ -59,25 +62,25 @@ public class Caladbolg extends DialogFragment implements OnClickListener,
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         int initialColor = getArguments().getInt(KEY_INITIAL_COLOR);
-        alpha = Color.alpha(initialColor);
-        rgb = toRGB(initialColor);
+        mAlpha = Color.alpha(initialColor);
+        mRGB = toRGB(initialColor);
 
         View view = View.inflate(getActivity(), R.layout.dialog_calabolg, null);
-        colorIndicaterView = view.findViewById(R.id.view_color_indicater);
-        colorCodeEdit = (EditText) view.findViewById(R.id.edit_text_color_code);
-        colorCodeEdit.addTextChangedListener(this);
-        colorCodeEdit.setOnKeyListener(this);
-        colorCodeEdit.setOnFocusChangeListener(this);
-        colorCodeParamsText = (TextView) view.findViewById(R.id.text_color_code_params);
-        colorPickerView = (ColorPickerView) view.findViewById(R.id.view_color_picker);
-        colorPickerView.setOnChangeColor(this);
-        colorPickerView.setColor(initialColor);
-        alphaSeekBar = (SeekBar) view.findViewById(R.id.seek_bar_alpha);
-        alphaSeekBar.setOnSeekBarChangeListener(this);
+        mColorIndicaterView = view.findViewById(R.id.view_color_indicater);
+        mColorCodeEdit = (EditText) view.findViewById(R.id.edit_text_color_code);
+        mColorCodeEdit.addTextChangedListener(this);
+        mColorCodeEdit.setOnKeyListener(this);
+        mColorCodeEdit.setOnFocusChangeListener(this);
+        mColorCodeParamsText = (TextView) view.findViewById(R.id.text_color_code_params);
+        mColorPickerView = (ColorPickerView) view.findViewById(R.id.view_color_picker);
+        mColorPickerView.setOnChangeColor(this);
+        mColorPickerView.setColor(initialColor);
+        mAlphaSeekBar = (SeekBar) view.findViewById(R.id.seek_bar_alpha);
+        mAlphaSeekBar.setOnSeekBarChangeListener(this);
 
-        setColorToIndicaters(rgb, alpha);
+        setColorToIndicaters(mRGB, mAlpha);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        Builder builder = new Builder(getActivity());
         builder.setView(view);
         builder.setPositiveButton(getActivity().getString(R.string.dialog_positive_btn), this);
         builder.setNegativeButton(getActivity().getString(R.string.dialog_negative_btn), this);
@@ -87,14 +90,14 @@ public class Caladbolg extends DialogFragment implements OnClickListener,
 
     @Override
     public void onChangeColor(int rgb) {
-        this.rgb = rgb;
-        setColorToIndicaters(rgb, alpha);
+        mRGB = rgb;
+        setColorToIndicaters(mRGB, mAlpha);
     }
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        this.alpha = progress;
-        setColorToIndicaters(rgb, alpha);
+        mAlpha = progress;
+        setColorToIndicaters(mRGB, mAlpha);
     }
 
     @Override
@@ -103,19 +106,19 @@ public class Caladbolg extends DialogFragment implements OnClickListener,
     public void onStopTrackingTouch(SeekBar seekBar) {}
 
     private void setColorToIndicaters(int rgb, int alpha) {
-        colorIndicaterView.setBackgroundColor(toARGB(rgb, alpha));
-        colorCodeEdit.setText(getActivity().getString(R.string.color_fmt, toARGB(rgb, alpha)));
-        colorCodeParamsText.setText(getActivity()
+        mColorIndicaterView.setBackgroundColor(toARGB(rgb, alpha));
+        mColorCodeEdit.setText(getActivity().getString(R.string.color_fmt, toARGB(rgb, alpha)));
+        mColorCodeParamsText.setText(getActivity()
                 .getString(R.string.color_param_fmt, Color.red(rgb), Color.green(rgb), Color.blue(rgb), alpha));
-        colorCodeParamsText.requestFocus();
+        mColorCodeParamsText.requestFocus();
     }
 
     private void setColorToExceptEditText(int rgb, int alpha) {
-        colorIndicaterView.setBackgroundColor(toARGB(rgb, alpha));
-        colorCodeParamsText.setText(getActivity()
-                .getString(R.string.color_param_fmt, Color.red(rgb), Color.green(rgb), Color.blue(rgb), alpha));
-        colorPickerView.setColor(rgb);
-        alphaSeekBar.setProgress(alpha);
+        mColorIndicaterView.setBackgroundColor(toARGB(rgb, alpha));
+        mColorCodeParamsText.setText(getActivity().getString(R.string.color_param_fmt, Color.red(rgb),
+                Color.green(rgb), Color.blue(rgb), alpha));
+        mColorPickerView.setColor(rgb);
+        mAlphaSeekBar.setProgress(alpha);
     }
 
     private String toHexColorCode(int rgb, int alpha) {
@@ -146,12 +149,12 @@ public class Caladbolg extends DialogFragment implements OnClickListener,
 
     @Override
     public void afterTextChanged(Editable s) {
-        if (colorCodeEdit.getText().toString().matches("^#?[\\dabcdf]{8}$")) {
-            int argb = toARGB(colorCodeEdit.getText().toString());
-            rgb = toRGB(argb);
-            alpha = Color.alpha(argb);
+        if (mColorCodeEdit.getText().toString().matches("^#?[\\dabcdf]{8}$")) {
+            int argb = toARGB(mColorCodeEdit.getText().toString());
+            mRGB = toRGB(argb);
+            mAlpha = Color.alpha(argb);
 
-            if (colorCodeEdit.isFocused()) setColorToExceptEditText(rgb, alpha);
+            if (mColorCodeEdit.isFocused()) setColorToExceptEditText(mRGB, mAlpha);
         }
     }
 
@@ -166,14 +169,14 @@ public class Caladbolg extends DialogFragment implements OnClickListener,
                     getSystemService(Context.INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
-            if (colorCodeEdit.getText().toString().matches("^#?[\\dabcdf]{8}$")) {
-                int argb = toARGB(colorCodeEdit.getText().toString());
-                rgb = toRGB(argb);
-                alpha = Color.alpha(argb);
-                setColorToExceptEditText(rgb, alpha);
+            if (mColorCodeEdit.getText().toString().matches("^#?[\\dabcdf]{8}$")) {
+                int argb = toARGB(mColorCodeEdit.getText().toString());
+                mRGB = toRGB(argb);
+                mAlpha = Color.alpha(argb);
+                setColorToExceptEditText(mRGB, mAlpha);
             }
             else {
-                colorCodeEdit.setText((String) colorCodeEdit.getTag());
+                mColorCodeEdit.setText((String) mColorCodeEdit.getTag());
             }
 
             return true;
@@ -183,8 +186,8 @@ public class Caladbolg extends DialogFragment implements OnClickListener,
 
     @Override
     public void onFocusChange(View v, boolean hasFocus) {
-        if (v == colorCodeEdit) {
-            colorCodeEdit.setTag(colorCodeEdit.getText().toString());
+        if (v == mColorCodeEdit) {
+            mColorCodeEdit.setTag(mColorCodeEdit.getText().toString());
         }
     }
 
@@ -192,16 +195,13 @@ public class Caladbolg extends DialogFragment implements OnClickListener,
     public void onClick(DialogInterface dialog, int which) {
         switch (which) {
             case Dialog.BUTTON_POSITIVE :
-                if (onPickedColorListener != null) onPickedColorListener.onPickedColor(rgb, alpha);
+                if (mOnPickedColorListener != null) mOnPickedColorListener.onPickedColor(mRGB, mAlpha);
                 break;
             case Dialog.BUTTON_NEGATIVE :
-                if (onCancelPickColorListener != null) onCancelPickColorListener.onCancelPickColor();
+                if (mOnCancelPickColorListener != null) mOnCancelPickColorListener.onCancelPickColor();
                 break;
         }
     }
-
-    OnPickedColorListener onPickedColorListener;
-    OnCancelPickColorListener onCancelPickColorListener;
 
     public interface OnPickedColorListener {
         void onPickedColor(int rgb, int alpha);
