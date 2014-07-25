@@ -15,6 +15,7 @@ import android.graphics.RectF;
 import android.graphics.Shader.TileMode;
 import android.graphics.SweepGradient;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 
 public class ColorPickerView extends View {
@@ -164,5 +165,30 @@ public class ColorPickerView extends View {
 
     }
 
+        @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        int action = event.getAction();
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:
+            case MotionEvent.ACTION_MOVE:
 
+                int x = (int) event.getX();
+                int y = (int) event.getY();
+                int centerX = getWidth() / 2;
+                int centerY = getHeight() / 2;
+                int dx = x - centerX;
+                int dy = y - centerY;
+                double d = Math.sqrt(dx * dx + dy * dy);
+
+                if (d <= colorWheelRadius) {
+                    colorHSV[0] = (float) (Math.toDegrees(Math.atan2(dy, dx)) + 180f);
+                    colorHSV[1] = Math.max(0f, Math.min(1f, (float) (d / colorWheelRadius)));
+
+                    invalidate();
+                }
+
+                return true;
+        }
+        return super.onTouchEvent(event);
+    }
 }
