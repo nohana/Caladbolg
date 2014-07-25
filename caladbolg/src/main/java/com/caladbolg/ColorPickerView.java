@@ -26,8 +26,8 @@ public class ColorPickerView extends View {
     private RectF innerWheelRect;
 
     private int paramInnerPadding = 0;
-    private int paramOuterPadding = 5;
-    private int paramValueSliderWidth = 5; // width of the value slider
+    private int paramOuterPadding = 4;
+    private int paramValueSliderWidth = 10; // width of the value slider
     private int paramColorCount = 20;
 
     private Paint colorPointerPaint;
@@ -36,7 +36,9 @@ public class ColorPickerView extends View {
 
     private Path valuePointerPath;
     private Path valuePointerOuterPath;
+    private Path valuePointerDividerPath;
     private Paint valuePointerOuterPaint;
+    private Paint valuePointerDividerPaint;
 
     private int innerPadding;
     private int outerPadding;
@@ -104,10 +106,17 @@ public class ColorPickerView extends View {
 
         valuePointerPath = new Path();
         valuePointerOuterPath = new Path();
+        valuePointerDividerPath = new Path();
+
         valuePointerOuterPaint = new Paint();
         valuePointerOuterPaint.setStyle(Style.FILL_AND_STROKE);
         valuePointerOuterPaint.setColor(Color.WHITE);
         valuePointerOuterPaint.setAntiAlias(true);
+
+        valuePointerDividerPaint = new Paint();
+        valuePointerDividerPaint.setStyle(Style.FILL_AND_STROKE);
+        valuePointerDividerPaint.setColor(Color.GRAY);
+        valuePointerDividerPaint.setAntiAlias(true);
     }
 
 
@@ -137,7 +146,7 @@ public class ColorPickerView extends View {
         float colorPointX = (float) ((-Math.cos(hueAngle) * colorHSV[1] * colorWheelRadius) + centerX);
         float colorPointY = (float) ((-Math.sin(hueAngle) * colorHSV[1] * colorWheelRadius) + centerY);
 
-        float pointerRadius = 0.1f * colorWheelRadius;
+        float pointerRadius = 0.12f * colorWheelRadius;
         colorPointerPaint.setColor(Color.HSVToColor(colorHSV));
         canvas.drawCircle(colorPointX, colorPointY, pointerRadius, colorPointerPaint);
         canvas.drawCircle(colorPointX, colorPointY, pointerRadius + 1f, colorPointerDividerPaint);
@@ -166,6 +175,7 @@ public class ColorPickerView extends View {
 
         // drawing color value slider selector
         canvas.drawPath(valuePointerOuterPath, valuePointerOuterPaint);
+        canvas.drawPath(valuePointerDividerPath, valuePointerDividerPaint);
         canvas.drawPath(valuePointerPath, colorPointerPaint);
     }
 
@@ -188,19 +198,23 @@ public class ColorPickerView extends View {
 
         colorWheelBitmap = createColorWheelBitmap(colorWheelRadius * 2, colorWheelRadius * 2);
 
-        int valuePointerHeight = (int) (2 * outerWheelRadius * Math.PI / (paramColorCount * 2));
-        int valuePointerOuterWidth = 5;
-        int valuePointerDividerWidth = 2;
-        int valuePointerRight = centerX - innerWheelRadius;
-        int valuePointerLeft = -valuePointerRight;
-        int valuePointerTop = centerY - valuePointerHeight / 2;
-        int valuePointerBottom = valuePointerTop + valuePointerHeight;
+        float valuePointerHeight = (float) (2 * outerWheelRadius * Math.PI / (paramColorCount * 2));
+        float valuePointerOuterWidth = Math.max(5f, valuePointerHeight / 10);
+        float valuePointerDividerWidth = Math.max(2f, valuePointerOuterWidth / 10);
+        float valuePointerRight = centerX - ((outerWheelRadius + innerWheelRadius) / 2 + innerWheelRadius) / 2;
+        float valuePointerLeft = -valuePointerRight;
+        float valuePointerTop = centerY - valuePointerHeight / 2;
+        float valuePointerBottom = valuePointerTop + valuePointerHeight;
 
         valuePointerPath.addRoundRect(new RectF(valuePointerLeft, valuePointerTop,
                 valuePointerRight, valuePointerBottom), valuePointerHeight / 2, valuePointerHeight / 2 , Direction.CCW);
         valuePointerOuterPath.addRoundRect(new RectF(valuePointerLeft, valuePointerTop - valuePointerOuterWidth,
                 valuePointerRight + valuePointerOuterWidth, valuePointerBottom + valuePointerOuterWidth),
                 valuePointerHeight / 2 + valuePointerOuterWidth, valuePointerHeight / 2 + valuePointerOuterWidth, Direction.CCW);
+        valuePointerDividerPath.addRoundRect(new RectF(valuePointerLeft, valuePointerTop - valuePointerDividerWidth,
+                        valuePointerRight + valuePointerDividerWidth, valuePointerBottom + valuePointerDividerWidth),
+                valuePointerHeight / 2 + valuePointerDividerWidth, valuePointerHeight / 2 + valuePointerDividerWidth, Direction.CCW
+        );
     }
 
     private Bitmap createColorWheelBitmap(int width, int height) {
