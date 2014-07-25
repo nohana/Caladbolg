@@ -1,10 +1,12 @@
 package com.caladbolg;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.view.View;
 
 public class Caladbolg extends DialogFragment {
     static final String KEY_INITIAL_COLOR = "key_initial_color";
@@ -29,9 +31,11 @@ public class Caladbolg extends DialogFragment {
         alpha = Color.alpha(initialColor);
         rgb = initialColor - alpha;
 
+        View view = View.inflate(getActivity(), com.caladbolg.R.layout.dialog_calabolg, null);
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setView(view);
 
-
-        return super.onCreateDialog(savedInstanceState);
+        return builder.create();
     }
 }

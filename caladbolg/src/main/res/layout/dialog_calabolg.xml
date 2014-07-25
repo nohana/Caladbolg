@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp">
+    <View
+        android:id="@+id/center_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
+        />
+
+    <View android:id="@+id/color_showing_view"
+        android:background="@android:color/background_dark"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@id/center_view"/>
+
+    <EditText android:id="@+id/edit_text_color_code"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@id/center_view"
+        android:inputType="none"/>
+
+    <SeekBar android:id="@+id/alpha_seek_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_alignParentBottom="true"
+        android:progress="255"
+        android:max="255"/>
+
+    <com.caladbolg.ColorPickerView android:id="@+id/color_map_circle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/color_showing_view"
+        android:layout_above="@id/alpha_seek_bar" />
+
+</RelativeLayout>
