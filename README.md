@@ -4,6 +4,10 @@
 
 Nohana made android color picker library.
 
+## Screen Shot
+
+![Color Selection](https://raw.githubusercontent.com/nohana/Caladbolg/master/documents/ss1.png)
+
 ## License
 
 This library is licensed under Apache License v2.
