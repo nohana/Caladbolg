@@ -18,8 +18,10 @@ public class SampleActivity extends ActionBarActivity implements OnPickedColorLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sample);
 
-        Caladbolg caladbolg = Caladbolg.getInstance(Color.BLACK);
-        caladbolg.show(getSupportFragmentManager(), "caladbolg");
+        if (getSupportFragmentManager().findFragmentByTag("caladbolg") == null) {
+            Caladbolg caladbolg = Caladbolg.getInstance(Color.BLACK);
+            caladbolg.show(getSupportFragmentManager(), "caladbolg");
+        }
     }
 
 
