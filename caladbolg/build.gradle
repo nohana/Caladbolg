@@ -26,3 +26,18 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:19.+'
 }
+
+def repos = new File(rootDir, "repository")
+
+apply plugin: 'maven'
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository url: "file://${repos.absolutePath}"
+            pom.version = '1.0.0'
+            pom.groupId = 'com.caladbolg'
+            pom.artifactId = 'Caladbolg'
+        }
+    }
+}
