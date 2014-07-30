@@ -51,6 +51,12 @@ public class Caladbolg extends DialogFragment implements OnClickListener,
         }
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(KEY_INITIAL_COLOR, toARGB(mRGB, mAlpha));
+    }
+
     public static Caladbolg getInstance(int initialColor) {
         Bundle args = new Bundle();
         args.putInt(KEY_INITIAL_COLOR, initialColor);
@@ -61,11 +67,12 @@ public class Caladbolg extends DialogFragment implements OnClickListener,
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        int initialColor = getArguments().getInt(KEY_INITIAL_COLOR);
+        Bundle args = savedInstanceState == null ? getArguments() : savedInstanceState;
+        int initialColor = args.getInt(KEY_INITIAL_COLOR);
         mAlpha = Color.alpha(initialColor);
         mRGB = toRGB(initialColor);
 
-        View view = View.inflate(getActivity(), R.layout.dialog_calabolg, null);
+        View view = View.inflate(getActivity(), R.layout.dialog_caladbolg, null);
         mColorIndicaterView = view.findViewById(R.id.view_color_indicater);
         mColorCodeEdit = (EditText) view.findViewById(R.id.edit_text_color_code);
         mColorCodeEdit.addTextChangedListener(this);
