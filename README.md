@@ -2,11 +2,39 @@
 
 [![Build Status](https://travis-ci.org/nohana/Caladbolg.svg?branch=master)](https://travis-ci.org/nohana/Caladbolg)
 
-Nohana made android color picker library.
+Circular color picker dialog for andorid produced by nohana.
 
 ## Screen Shot
 
 ![Color Selection](https://raw.githubusercontent.com/nohana/Caladbolg/master/documents/ss1.png)
+
+## How to use
+
+If you would like to show a color picker dialog from your activity,
+
+```java
+public class MyActivity extends FragmentActivity implements OnPickedColorListener {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.my_activity);
+
+        findViewById(R.id.button_pick).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // create instance with a default selected color and
+                    // show the dialog
+                    Caladbolg.getInstance(Color.BLACK).show(getSupportFragmentManager(), "caladbolg");
+                }
+        });
+    }
+
+    @Override
+    public void onPickedColor(int rgb, int alpha) {
+        // if the user select a color
+    }
+}
+```
 
 ## License
 
