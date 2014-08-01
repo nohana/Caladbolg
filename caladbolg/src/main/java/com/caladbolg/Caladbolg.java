@@ -35,20 +35,19 @@ public class Caladbolg extends DialogFragment implements OnClickListener,
     private EditText mColorCodeEdit;
     private ColorPickerView mColorPickerView;
 
-    private OnPickedColorListener mOnPickedColorListener;
-    private OnCancelPickColorListener mOnCancelPickColorListener;
+    private ColorPickerCallback mCallback;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        if (activity instanceof OnPickedColorListener) {
-            mOnPickedColorListener = (OnPickedColorListener) activity;
+        if (activity instanceof ColorPickerCallback) {
+            mCallback = (ColorPickerCallback) activity;
+        }
+        else {
+            throw new ClassCastException(activity.toString() + " must implement OnArticleSelectedListener");
         }
 
-        if (activity instanceof OnCancelPickColorListener) {
-            mOnCancelPickColorListener = (OnCancelPickColorListener) activity;
-        }
     }
 
     @Override
@@ -202,19 +201,16 @@ public class Caladbolg extends DialogFragment implements OnClickListener,
     public void onClick(DialogInterface dialog, int which) {
         switch (which) {
             case Dialog.BUTTON_POSITIVE :
-                if (mOnPickedColorListener != null) mOnPickedColorListener.onPickedColor(mRGB, mAlpha);
+                if (mCallback != null) mCallback.onPickColor(mRGB, mAlpha);
                 break;
             case Dialog.BUTTON_NEGATIVE :
-                if (mOnCancelPickColorListener != null) mOnCancelPickColorListener.onCancelPickColor();
+                if (mCallback != null) mCallback.onCancel();
                 break;
         }
     }
 
-    public interface OnPickedColorListener {
-        void onPickedColor(int rgb, int alpha);
-    }
-
-    public interface OnCancelPickColorListener {
-        void onCancelPickColor();
+    public interface ColorPickerCallback {
+        void onPickColor(int rgb, int alpha);
+        void onCancel();
     }
 }
