@@ -9,6 +9,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -41,11 +42,15 @@ public class Caladbolg extends DialogFragment implements OnClickListener,
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
+        Fragment target = getTargetFragment();
         if (activity instanceof ColorPickerCallback) {
             mCallback = (ColorPickerCallback) activity;
         }
+        else if (target != null && target instanceof ColorPickerCallback) {
+            mCallback = (ColorPickerCallback) target;
+        }
         else {
-            throw new ClassCastException(activity.toString() + " must implement OnArticleSelectedListener");
+            throw new ClassCastException(getActivity().getString(R.string.callback_implement_msg));
         }
 
     }
@@ -61,6 +66,15 @@ public class Caladbolg extends DialogFragment implements OnClickListener,
         args.putInt(KEY_INITIAL_COLOR, initialColor);
         Caladbolg caladbolg = new Caladbolg();
         caladbolg.setArguments(args);
+        return caladbolg;
+    }
+
+    public static Caladbolg getInstance(Fragment fragment, int initialColor) {
+        Bundle args = new Bundle();
+        args.putInt(KEY_INITIAL_COLOR, initialColor);
+        Caladbolg caladbolg = new Caladbolg();
+        caladbolg.setArguments(args);
+        caladbolg.setTargetFragment(fragment, 0);
         return caladbolg;
     }
 
