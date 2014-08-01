@@ -4,4 +4,8 @@
     <string name="app_name">Sample</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_sample_fragment">SampleFragmentActivity</string>
+    <string name="title_activity_sample_list">SampleListActivity</string>
+
 </resources>
