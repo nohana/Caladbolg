@@ -9,6 +9,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -35,20 +36,23 @@ public class Caladbolg extends DialogFragment implements OnClickListener,
     private EditText mColorCodeEdit;
     private ColorPickerView mColorPickerView;
 
-    private OnPickedColorListener mOnPickedColorListener;
-    private OnCancelPickColorListener mOnCancelPickColorListener;
+    private ColorPickerCallback mCallback;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        if (activity instanceof OnPickedColorListener) {
-            mOnPickedColorListener = (OnPickedColorListener) activity;
+        Fragment target = getTargetFragment();
+        if (activity instanceof ColorPickerCallback) {
+            mCallback = (ColorPickerCallback) activity;
+        }
+        else if (target != null && target instanceof ColorPickerCallback) {
+            mCallback = (ColorPickerCallback) target;
+        }
+        else {
+            throw new ClassCastException(getActivity().getString(R.string.callback_implement_msg));
         }
 
-        if (activity instanceof OnCancelPickColorListener) {
-            mOnCancelPickColorListener = (OnCancelPickColorListener) activity;
-        }
     }
 
     @Override
@@ -62,6 +66,15 @@ public class Caladbolg extends DialogFragment implements OnClickListener,
         args.putInt(KEY_INITIAL_COLOR, initialColor);
         Caladbolg caladbolg = new Caladbolg();
         caladbolg.setArguments(args);
+        return caladbolg;
+    }
+
+    public static Caladbolg getInstance(Fragment fragment, int initialColor) {
+        Bundle args = new Bundle();
+        args.putInt(KEY_INITIAL_COLOR, initialColor);
+        Caladbolg caladbolg = new Caladbolg();
+        caladbolg.setArguments(args);
+        caladbolg.setTargetFragment(fragment, 0);
         return caladbolg;
     }
 
@@ -202,19 +215,16 @@ public class Caladbolg extends DialogFragment implements OnClickListener,
     public void onClick(DialogInterface dialog, int which) {
         switch (which) {
             case Dialog.BUTTON_POSITIVE :
-                if (mOnPickedColorListener != null) mOnPickedColorListener.onPickedColor(mRGB, mAlpha);
+                if (mCallback != null) mCallback.onPickColor(mRGB, mAlpha);
                 break;
             case Dialog.BUTTON_NEGATIVE :
-                if (mOnCancelPickColorListener != null) mOnCancelPickColorListener.onCancelPickColor();
+                if (mCallback != null) mCallback.onCancel();
                 break;
         }
     }
 
-    public interface OnPickedColorListener {
-        void onPickedColor(int rgb, int alpha);
-    }
-
-    public interface OnCancelPickColorListener {
-        void onCancelPickColor();
+    public interface ColorPickerCallback {
+        void onPickColor(int rgb, int alpha);
+        void onCancel();
     }
 }

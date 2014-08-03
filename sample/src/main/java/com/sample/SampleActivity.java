@@ -8,13 +8,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-
 import com.caladbolg.Caladbolg;
-import com.caladbolg.Caladbolg.OnCancelPickColorListener;
-import com.caladbolg.Caladbolg.OnPickedColorListener;
+import com.caladbolg.Caladbolg.ColorPickerCallback;
 
 
-public class SampleActivity extends ActionBarActivity implements OnPickedColorListener, OnCancelPickColorListener {
+public class SampleActivity extends ActionBarActivity implements ColorPickerCallback{
 
     Caladbolg mCaladbolg;
     RelativeLayout mLayout;
@@ -39,15 +37,15 @@ public class SampleActivity extends ActionBarActivity implements OnPickedColorLi
     }
 
     @Override
-    public void onCancelPickColor() {
-        Toast.makeText(this, "cancel", Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onPickedColor(int rgb, int alpha) {
+    public void onPickColor(int rgb, int alpha) {
         Log.v(SampleActivity.class.getSimpleName(), "RGB:" + rgb + " Alpha:" + alpha);
         //mCaladbolg = Caladbolg.getInstance(rgb);
         mLayout.setBackgroundColor(rgb);
         mLayout.setAlpha((float) alpha);
+    }
+
+    @Override
+    public void onCancel() {
+        Toast.makeText(this, "cancel", Toast.LENGTH_LONG).show();
     }
 }
