@@ -1,6 +1,7 @@
 package com.sample;
 
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -14,6 +15,7 @@ import com.caladbolg.Caladbolg.ColorPickerCallback;
 
 public class SampleActivity extends ActionBarActivity implements ColorPickerCallback{
     private static final String TAG = SampleActivity.class.getSimpleName();
+    private static final String SAVED_STATE_BACKGROUND_COLOR = "com.sample.SAVED_STATE_BACKGROUND_COLOR";
 
     Caladbolg mCaladbolg;
     RelativeLayout mLayout;
@@ -29,11 +31,28 @@ public class SampleActivity extends ActionBarActivity implements ColorPickerCall
                 return false;
             }
         });
+        if (savedInstanceState != null) {
+            mLayout.setBackgroundColor(savedInstanceState.getInt(SAVED_STATE_BACKGROUND_COLOR));
+        }
         setContentView(mLayout);
 
-        if (getSupportFragmentManager().findFragmentByTag("caladbolg") == null) {
-            mCaladbolg = Caladbolg.getInstance(Color.BLACK);
+        mCaladbolg = (Caladbolg) getSupportFragmentManager().findFragmentByTag("caladbolg");
+        if (mCaladbolg == null) {
+            int color = Color.BLACK;
+            if (mLayout.getBackground() instanceof ColorDrawable) {
+                color = ((ColorDrawable) mLayout.getBackground()).getColor();
+            }
+            mCaladbolg = Caladbolg.getInstance(color);
             mCaladbolg.show(getSupportFragmentManager(), "caladbolg");
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mLayout.getBackground() instanceof ColorDrawable) {
+            int color = ((ColorDrawable) mLayout.getBackground()).getColor();
+            outState.putInt(SAVED_STATE_BACKGROUND_COLOR, color);
         }
     }
 
