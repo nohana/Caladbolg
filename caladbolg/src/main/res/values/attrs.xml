@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ColorIndicatorView">
+        <!--<attr name="auto_background_color" format="boolean"/>-->
+        <attr name="background_color" format="color"/>
+        <attr name="front_color" format="color"/>
+        <attr name="inner_margin" format="dimension"/>
+    </declare-styleable>
+
+</resources>

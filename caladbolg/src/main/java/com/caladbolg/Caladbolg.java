@@ -32,7 +32,7 @@ public class Caladbolg extends DialogFragment implements OnClickListener,
     private int mAlpha;
 
     private SeekBar mAlphaSeekBar;
-    private View mColorIndicaterView;
+    private ColorIndicatorView mColorIndicatorView;
     private TextView mColorCodeParamsText;
     private EditText mColorCodeEdit;
     private ColorPickerView mColorPickerView;
@@ -89,7 +89,7 @@ public class Caladbolg extends DialogFragment implements OnClickListener,
         }
 
         View view = View.inflate(getActivity(), R.layout.dialog_caladbolg, null);
-        mColorIndicaterView = view.findViewById(R.id.view_color_indicater);
+        mColorIndicatorView = (ColorIndicatorView) view.findViewById(R.id.view_color_indicator);
         mColorCodeEdit = (EditText) view.findViewById(R.id.edit_text_color_code);
         mColorCodeEdit.addTextChangedListener(this);
         mColorCodeEdit.setOnKeyListener(this);
@@ -130,7 +130,7 @@ public class Caladbolg extends DialogFragment implements OnClickListener,
     public void onStopTrackingTouch(SeekBar seekBar) {}
 
     private void setColorToIndicaters(int rgb, int alpha) {
-        mColorIndicaterView.setBackgroundColor(toARGB(rgb, alpha));
+//        mColorIndicatorView.setFrontColor(toARGB(rgb, alpha));
         mColorCodeEdit.setText(getActivity().getString(R.string.color_fmt, toARGB(rgb, alpha)));
         mColorCodeParamsText.setText(getActivity()
                 .getString(R.string.color_param_fmt, Color.red(rgb), Color.green(rgb), Color.blue(rgb), alpha));
@@ -138,7 +138,7 @@ public class Caladbolg extends DialogFragment implements OnClickListener,
     }
 
     private void setColorToExceptEditText(int rgb, int alpha) {
-        mColorIndicaterView.setBackgroundColor(toARGB(rgb, alpha));
+//        mColorIndicatorView.setFrontColor(toARGB(rgb, alpha));
         mColorCodeParamsText.setText(getActivity().getString(R.string.color_param_fmt, Color.red(rgb),
                 Color.green(rgb), Color.blue(rgb), alpha));
         mColorPickerView.setColor(rgb);
