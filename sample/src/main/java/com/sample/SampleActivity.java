@@ -13,6 +13,7 @@ import com.caladbolg.Caladbolg.ColorPickerCallback;
 
 
 public class SampleActivity extends ActionBarActivity implements ColorPickerCallback{
+    private static final String TAG = SampleActivity.class.getSimpleName();
 
     Caladbolg mCaladbolg;
     RelativeLayout mLayout;
@@ -38,10 +39,9 @@ public class SampleActivity extends ActionBarActivity implements ColorPickerCall
 
     @Override
     public void onPickColor(int rgb, int alpha) {
-        Log.v(SampleActivity.class.getSimpleName(), "RGB:" + rgb + " Alpha:" + alpha);
-        //mCaladbolg = Caladbolg.getInstance(rgb);
-        mLayout.setBackgroundColor(rgb);
-        mLayout.setAlpha((float) alpha);
+        Log.v(TAG, "RGB:" + rgb + " Alpha:" + alpha);
+        int argb = Color.argb(alpha, Color.red(rgb), Color.green(rgb), Color.blue(rgb));
+        mLayout.setBackgroundColor(argb);
     }
 
     @Override

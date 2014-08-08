@@ -49,8 +49,8 @@ public class SampleFragment extends Fragment implements ColorPickerCallback {
     @Override
     public void onPickColor(int rgb, int alpha) {
         Log.v(SampleFragment.class.getSimpleName(), "RGB:" + rgb + " Alpha:" + alpha);
-        mLayout.setBackgroundColor(rgb);
-        mLayout.setAlpha((float) alpha);
+        int argb = Color.argb(alpha, Color.red(rgb), Color.green(rgb), Color.blue(rgb));
+        mLayout.setBackgroundColor(argb);
      }
 
     @Override
