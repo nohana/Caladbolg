@@ -1,7 +1,7 @@
 package com.caladbolg;
 
 import android.app.Activity;
-import android.app.AlertDialog.Builder;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -100,7 +100,7 @@ public class Caladbolg extends DialogFragment implements OnClickListener,
 
         setColorToIndicaters(mRGB, mAlpha);
 
-        Builder builder = new Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(view);
         builder.setPositiveButton(getActivity().getString(R.string.dialog_positive_btn), this);
         builder.setNegativeButton(getActivity().getString(R.string.dialog_negative_btn), this);

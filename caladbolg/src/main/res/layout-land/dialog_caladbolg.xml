@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:padding="10dp" >
+
+    <LinearLayout android:id="@+id/container_color_indicater_"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <LinearLayout android:id="@+id/container_color_indicater"
+            android:background="@drawable/bg_color_indicater_view_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp" >
+
+            <View android:id="@+id/view_color_indicater"
+                android:layout_width="@dimen/color_indicater_view_size"
+                android:layout_height="@dimen/color_indicater_view_size" />
+        </LinearLayout>
+
+        <EditText android:id="@+id/edit_text_color_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:singleLine="true"
+            android:background="@color/transparent"
+            android:textColor="@color/color_code_text"
+            android:textSize="@dimen/color_code_text_size"
+            android:inputType="none"/>
+
+        <TextView android:id="@+id/text_color_code_params"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:textColor="@color/color_code_params_text"
+            android:textSize="@dimen/color_code_params_text_size"
+            android:gravity="center_horizontal"
+            tools:text="R:000 G:000 B:000 A:000"/>
+    </LinearLayout>
+
+    <com.caladbolg.ColorPickerView
+        android:id="@+id/view_color_picker"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="16dp"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@id/container_color_indicater_" />
+
+    <SeekBar
+        android:id="@+id/seek_bar_alpha"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:progress="255"
+        android:max="255"
+        android:layout_below="@id/view_color_picker"
+        android:layout_alignLeft="@id/view_color_picker"
+        android:layout_alignRight="@id/view_color_picker"/>
+</RelativeLayout>
