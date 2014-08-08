@@ -25,7 +25,8 @@ import com.caladbolg.ColorPickerView.OnChangeColorListener;
 
 public class Caladbolg extends DialogFragment implements OnClickListener,
         OnSeekBarChangeListener, TextWatcher, OnChangeColorListener, OnKeyListener, OnFocusChangeListener {
-    private static final String KEY_INITIAL_COLOR = "key_initial_color";
+    private static final String SAVED_STATE_RGB = "com.caladbolg.Caladbolg.KEY_SAVED_STATE_RGB";
+    private static final String SAVED_STATE_ALPHA = "com.caladbolg.Caladbolg.KEY_SAVED_STATE_ALPHA";
 
     private int mRGB;
     private int mAlpha;
@@ -58,32 +59,34 @@ public class Caladbolg extends DialogFragment implements OnClickListener,
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(KEY_INITIAL_COLOR, toARGB(mRGB, mAlpha));
+        outState.putInt(SAVED_STATE_RGB, mRGB);
+        outState.putInt(SAVED_STATE_ALPHA, mAlpha);
     }
 
     public static Caladbolg getInstance(int initialColor) {
-        Bundle args = new Bundle();
-        args.putInt(KEY_INITIAL_COLOR, initialColor);
         Caladbolg caladbolg = new Caladbolg();
-        caladbolg.setArguments(args);
+        caladbolg.initialize(initialColor);
         return caladbolg;
     }
 
     public static Caladbolg getInstance(Fragment fragment, int initialColor) {
-        Bundle args = new Bundle();
-        args.putInt(KEY_INITIAL_COLOR, initialColor);
         Caladbolg caladbolg = new Caladbolg();
-        caladbolg.setArguments(args);
+        caladbolg.initialize(initialColor);
         caladbolg.setTargetFragment(fragment, 0);
         return caladbolg;
     }
 
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Bundle args = savedInstanceState == null ? getArguments() : savedInstanceState;
-        int initialColor = args.getInt(KEY_INITIAL_COLOR);
+    public void initialize(int initialColor) {
         mAlpha = Color.alpha(initialColor);
         mRGB = toRGB(initialColor);
+    }
+
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            mAlpha = savedInstanceState.getInt(SAVED_STATE_ALPHA);
+            mRGB = savedInstanceState.getInt(SAVED_STATE_RGB);
+        }
 
         View view = View.inflate(getActivity(), R.layout.dialog_caladbolg, null);
         mColorIndicaterView = view.findViewById(R.id.view_color_indicater);
@@ -94,9 +97,10 @@ public class Caladbolg extends DialogFragment implements OnClickListener,
         mColorCodeParamsText = (TextView) view.findViewById(R.id.text_color_code_params);
         mColorPickerView = (ColorPickerView) view.findViewById(R.id.view_color_picker);
         mColorPickerView.setOnChangeColor(this);
-        mColorPickerView.setColor(initialColor);
+        mColorPickerView.setColor(mRGB);
         mAlphaSeekBar = (SeekBar) view.findViewById(R.id.seek_bar_alpha);
         mAlphaSeekBar.setOnSeekBarChangeListener(this);
+        mAlphaSeekBar.setProgress(mAlpha);
 
         setColorToIndicaters(mRGB, mAlpha);
 
