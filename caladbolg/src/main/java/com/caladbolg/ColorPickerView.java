@@ -21,7 +21,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 public class ColorPickerView extends View {
-
+    private static final String TAG = ColorPickerView.class.getSimpleName();
 
     private static final int mParamInnerPadding= 0;
     private static final int mParamOuterPadding= 4;
@@ -131,12 +131,11 @@ public class ColorPickerView extends View {
         mValuePointerDividerPaint.setAntiAlias(true);
     }
 
-
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int widthSize = MeasureSpec.getSize(widthMeasureSpec);
         int heightSize = MeasureSpec.getSize(heightMeasureSpec);
-        int size = Math.min(widthSize, heightSize);
+        int size = widthSize < heightSize ? widthMeasureSpec : heightMeasureSpec;
         setMeasuredDimension(size, size);
     }
 
@@ -193,15 +192,15 @@ public class ColorPickerView extends View {
 
     @Override
     protected void onSizeChanged(int width, int height, int oldw, int oldh) {
-
+        int size = Math.min(width, height);
         int centerX = width / 2;
         int centerY = height / 2;
 
-        mInnerPadding = mParamInnerPadding* width / 100;
-        mOuterPadding = mParamOuterPadding* width / 100;
-        mValueSliderWidth = mParamValueSliderWidth * width / 100;
+        mInnerPadding = mParamInnerPadding* size / 100;
+        mOuterPadding = mParamOuterPadding* size / 100;
+        mValueSliderWidth = mParamValueSliderWidth * size / 100;
 
-        mOuterWheelRadius = width / 2 - mOuterPadding;
+        mOuterWheelRadius = size / 2 - mOuterPadding;
         mInnerWheelRadius = mOuterWheelRadius - mValueSliderWidth;
         mColorWheelRadius = mInnerWheelRadius - mInnerPadding;
 
@@ -219,9 +218,9 @@ public class ColorPickerView extends View {
         float valuePointerBottom = valuePointerTop + valuePointerHeight;
 
         mValuePointerPath.addRoundRect(new RectF(valuePointerLeft, valuePointerTop,
-                valuePointerRight, valuePointerBottom), valuePointerHeight / 2, valuePointerHeight / 2 , Direction.CCW);
+                valuePointerRight, valuePointerBottom), valuePointerHeight / 2, valuePointerHeight / 2, Direction.CCW);
         mValuePointerOuterPath.addRoundRect(new RectF(valuePointerLeft, valuePointerTop - valuePointerOuterWidth,
-                valuePointerRight + valuePointerOuterWidth, valuePointerBottom + valuePointerOuterWidth),
+                        valuePointerRight + valuePointerOuterWidth, valuePointerBottom + valuePointerOuterWidth),
                 valuePointerHeight / 2 + valuePointerOuterWidth, valuePointerHeight / 2 + valuePointerOuterWidth, Direction.CCW);
         mValuePointerDividerPath.addRoundRect(new RectF(valuePointerLeft, valuePointerTop - valuePointerDividerWidth,
                         valuePointerRight + valuePointerDividerWidth, valuePointerBottom + valuePointerDividerWidth),
