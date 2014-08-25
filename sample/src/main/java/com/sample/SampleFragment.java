@@ -1,6 +1,7 @@
 package com.sample;
 
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -14,6 +15,8 @@ import com.caladbolg.Caladbolg;
 import com.caladbolg.Caladbolg.ColorPickerCallback;
 
 public class SampleFragment extends Fragment implements ColorPickerCallback {
+    private static final String TAG = SampleFragment.class.getSimpleName();
+    private static final String SAVED_STATE_BACKGROUND_COLOR = "com.sample.SAVED_STATE_BACKGROUND_COLOR";
 
     Caladbolg mCaladbolg;
     LinearLayout mLayout;
@@ -23,10 +26,16 @@ public class SampleFragment extends Fragment implements ColorPickerCallback {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getFragmentManager().findFragmentByTag("caladbolg") == null) {
-            mCaladbolg = Caladbolg.getInstance(this, Color.BLACK);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        mCaladbolg = (Caladbolg) getFragmentManager().findFragmentByTag("caladbolg");
+        if (mCaladbolg == null) {
+            int color = Color.BLACK;
+            if (mLayout.getBackground() instanceof ColorDrawable) {
+                color = ((ColorDrawable) mLayout.getBackground()).getColor();
+            }
+            mCaladbolg = Caladbolg.getInstance(this, color);
             mCaladbolg.show(getFragmentManager(), "caladbolg");
         }
     }
@@ -42,15 +51,26 @@ public class SampleFragment extends Fragment implements ColorPickerCallback {
                 return false;
             }
         });
+        if (savedInstanceState != null) {
+            mLayout.setBackgroundColor(savedInstanceState.getInt(SAVED_STATE_BACKGROUND_COLOR));
+        }
 
         return mLayout;
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if (mLayout.getBackground() instanceof ColorDrawable) {
+            int color = ((ColorDrawable) mLayout.getBackground()).getColor();
+            outState.putInt(SAVED_STATE_BACKGROUND_COLOR, color);
+        }
+    }
+
+    @Override
     public void onPickColor(int rgb, int alpha) {
-        Log.v(SampleFragment.class.getSimpleName(), "RGB:" + rgb + " Alpha:" + alpha);
-        mLayout.setBackgroundColor(rgb);
-        mLayout.setAlpha((float) alpha);
+        Log.v(TAG, "RGB:" + rgb + " Alpha:" + alpha);
+        int argb = Color.argb(alpha, Color.red(rgb), Color.green(rgb), Color.blue(rgb));
+        mLayout.setBackgroundColor(argb);
      }
 
     @Override
