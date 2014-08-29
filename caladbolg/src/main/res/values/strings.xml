@@ -10,6 +10,6 @@
 
     <string name="callback_implement_msg">must implement ColorPickerCallback. if you use Caladbolg from Fragment, please use getInstance(Fragment, int).</string>
 
-    <string name="color_fmt">#%1$x</string>
+    <string name="color_fmt">#%1$08x</string>
     <string name="color_param_fmt">R:%1$03d G:%2$03d B:%3$03d A:%4$03d</string>
 </resources>
