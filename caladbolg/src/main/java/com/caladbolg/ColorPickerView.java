@@ -168,19 +168,19 @@ public class ColorPickerView extends View {
         float[] hsv = new float[] { mColorHSV[0], mColorHSV[1], 1f };
         float sweepAngleStep = 180f / mParamColorCount;
 
-        for(int i = 0; i < mParamColorCount; i++) {
-            hsv[2] = 1f / (mParamColorCount-1) * i;
+        for(int i = 0; i <= mParamColorCount; i++) {
+            hsv[2] = 1f / mParamColorCount * i;
             mValueSliderPaint.setColor(Color.HSVToColor(hsv));
             mValueSliderPaint.setAntiAlias(true);
 
             mValueSliderPath.reset();
-            mValueSliderPath.arcTo(mOuterWheelRect, mValueArcStartDegree - i * sweepAngleStep, -sweepAngleStep);
-            mValueSliderPath.arcTo(mInnerWheelRect, -180 + mValueArcStartDegree + (mParamColorCount - i - 1) * sweepAngleStep, sweepAngleStep);
+            mValueSliderPath.arcTo(mOuterWheelRect, (float) (mValueArcStartDegree - (i - 0.5) * sweepAngleStep), -sweepAngleStep);
+            mValueSliderPath.arcTo(mInnerWheelRect, (float) (-180 + mValueArcStartDegree + (mParamColorCount - i - 0.5) * sweepAngleStep), sweepAngleStep);
             canvas.drawPath(mValueSliderPath, mValueSliderPaint);
 
             mValueSliderPath.reset();
-            mValueSliderPath.arcTo(mOuterWheelRect, mValueArcStartDegree + i * sweepAngleStep, sweepAngleStep);
-            mValueSliderPath.arcTo(mInnerWheelRect, 180 + mValueArcStartDegree - (mParamColorCount - i - 1) * sweepAngleStep, -sweepAngleStep);
+            mValueSliderPath.arcTo(mOuterWheelRect, (float) (mValueArcStartDegree + (i - 0.5) * sweepAngleStep), sweepAngleStep);
+            mValueSliderPath.arcTo(mInnerWheelRect, (float) (180 + mValueArcStartDegree - (mParamColorCount - i - 0.5) * sweepAngleStep), -sweepAngleStep);
             canvas.drawPath(mValueSliderPath, mValueSliderPaint);
         }
 
