@@ -22,6 +22,7 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import com.caladbolg.ColorPickerView.OnChangeColorListener;
+import com.caladbolg.utils.ColorUtils;
 
 public class Caladbolg extends DialogFragment implements OnClickListener,
         OnSeekBarChangeListener, TextWatcher, OnChangeColorListener, OnKeyListener, OnFocusChangeListener {
@@ -78,7 +79,7 @@ public class Caladbolg extends DialogFragment implements OnClickListener,
 
     public void initialize(int initialColor) {
         mAlpha = Color.alpha(initialColor);
-        mRGB = toRGB(initialColor);
+        mRGB = ColorUtils.rgb(initialColor);
     }
 
     @Override
@@ -130,40 +131,19 @@ public class Caladbolg extends DialogFragment implements OnClickListener,
     public void onStopTrackingTouch(SeekBar seekBar) {}
 
     private void setColorToIndicaters(int rgb, int alpha) {
-        mColorIndicaterView.setBackgroundColor(toARGB(rgb, alpha));
-        mColorCodeEdit.setText(getActivity().getString(R.string.color_fmt, toARGB(rgb, alpha)));
+        mColorIndicaterView.setBackgroundColor(ColorUtils.argb(rgb, alpha));
+        mColorCodeEdit.setText(getActivity().getString(R.string.color_fmt, ColorUtils.argb(rgb, alpha)));
         mColorCodeParamsText.setText(getActivity()
                 .getString(R.string.color_param_fmt, Color.red(rgb), Color.green(rgb), Color.blue(rgb), alpha));
         mColorCodeParamsText.requestFocus();
     }
 
     private void setColorToExceptEditText(int rgb, int alpha) {
-        mColorIndicaterView.setBackgroundColor(toARGB(rgb, alpha));
+        mColorIndicaterView.setBackgroundColor(ColorUtils.argb(rgb, alpha));
         mColorCodeParamsText.setText(getActivity().getString(R.string.color_param_fmt, Color.red(rgb),
                 Color.green(rgb), Color.blue(rgb), alpha));
         mColorPickerView.setColor(rgb);
         mAlphaSeekBar.setProgress(alpha);
-    }
-
-    private String toHexColorCode(int rgb, int alpha) {
-        return Integer.toHexString(toARGB(rgb, alpha));
-    }
-
-    private String toHexColorCode(int argb) {
-        return Integer.toHexString(argb);
-    }
-
-    private int toRGB(int argb) {
-        return argb & 0x00ffffff;
-    }
-
-    private int toARGB(String hexColorCode) {
-        if (hexColorCode.startsWith("#")) hexColorCode = hexColorCode.substring(1);
-        return (int) Long.parseLong(hexColorCode, 16);
-    }
-
-    private int toARGB(int rgb, int alpha) {
-        return Color.argb(alpha, Color.red(rgb), Color.green(rgb), Color.blue(rgb));
     }
 
     @Override
@@ -174,8 +154,8 @@ public class Caladbolg extends DialogFragment implements OnClickListener,
     @Override
     public void afterTextChanged(Editable s) {
         if (mColorCodeEdit.getText().toString().matches("^#?[\\dabcdf]{8}$")) {
-            int argb = toARGB(mColorCodeEdit.getText().toString());
-            mRGB = toRGB(argb);
+            int argb = ColorUtils.argb(mColorCodeEdit.getText().toString());
+            mRGB = ColorUtils.rgb(argb);
             mAlpha = Color.alpha(argb);
 
             if (mColorCodeEdit.isFocused()) setColorToExceptEditText(mRGB, mAlpha);
@@ -194,8 +174,8 @@ public class Caladbolg extends DialogFragment implements OnClickListener,
             inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
             if (mColorCodeEdit.getText().toString().matches("^#?[\\dabcdf]{8}$")) {
-                int argb = toARGB(mColorCodeEdit.getText().toString());
-                mRGB = toRGB(argb);
+                int argb = ColorUtils.argb(mColorCodeEdit.getText().toString());
+                mRGB = ColorUtils.rgb(argb);
                 mAlpha = Color.alpha(argb);
                 setColorToExceptEditText(mRGB, mAlpha);
             }
