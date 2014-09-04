@@ -63,13 +63,13 @@ public class Caladbolg extends DialogFragment implements OnClickListener,
         outState.putInt(SAVED_STATE_ALPHA, mAlpha);
     }
 
-    public static Caladbolg getInstance(int initialColor) {
+    public static Caladbolg newInstance(int initialColor) {
         Caladbolg caladbolg = new Caladbolg();
         caladbolg.initialize(initialColor);
         return caladbolg;
     }
 
-    public static Caladbolg getInstance(Fragment fragment, int initialColor) {
+    public static Caladbolg newInstance(Fragment fragment, int initialColor) {
         Caladbolg caladbolg = new Caladbolg();
         caladbolg.initialize(initialColor);
         caladbolg.setTargetFragment(fragment, 0);
