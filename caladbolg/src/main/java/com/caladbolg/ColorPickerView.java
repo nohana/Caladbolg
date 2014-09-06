@@ -23,8 +23,8 @@ import android.view.View;
 public class ColorPickerView extends View {
     private static final String TAG = ColorPickerView.class.getSimpleName();
 
-    private static final int mParamInnerPadding= 0;
-    private static final int mParamOuterPadding= 4;
+    private static final int mParamInnerPadding = 0;
+    private static final int mParamOuterPadding = 4;
     private static final int mParamValueSliderWidth = 10; // width of the value slider
     private static final int mParamColorCount = 20;
 
@@ -54,8 +54,10 @@ public class ColorPickerView extends View {
     private Paint mValueSliderPaint;
     private Path mValueSliderPath;
 
-    /** Currently selected color */
-    private float[] mColorHSV = new float[] { 0f, 0f, 1f };
+    /**
+     * Currently selected color
+     */
+    private float[] mColorHSV = new float[]{0f, 0f, 1f};
 
     private boolean mIsSlidingValue;
     private float mValueArcStartDegree = 0;
@@ -161,11 +163,11 @@ public class ColorPickerView extends View {
         mColorPointerPaint.setColor(Color.HSVToColor(mColorHSV));
         canvas.drawCircle(colorPointX, colorPointY, pointerRadius, mColorPointerPaint);
         canvas.drawCircle(colorPointX, colorPointY, pointerRadius + 1f, mColorPointerDividerPaint);
-        canvas.drawCircle(colorPointX, colorPointY, pointerRadius+7f, mColorPointerOuterPaint);
+        canvas.drawCircle(colorPointX, colorPointY, pointerRadius + 7f, mColorPointerOuterPaint);
 
         // drawing value slider
 
-        float[] hsv = new float[] { mColorHSV[0], mColorHSV[1], 1f };
+        float[] hsv = new float[]{mColorHSV[0], mColorHSV[1], 1f};
         float sweepAngleStep = 180f / mParamColorCount;
 
         for(int i = 0; i <= mParamColorCount; i++) {
@@ -196,8 +198,8 @@ public class ColorPickerView extends View {
         int centerX = width / 2;
         int centerY = height / 2;
 
-        mInnerPadding = mParamInnerPadding* size / 100;
-        mOuterPadding = mParamOuterPadding* size / 100;
+        mInnerPadding = mParamInnerPadding * size / 100;
+        mOuterPadding = mParamOuterPadding * size / 100;
         mValueSliderWidth = mParamValueSliderWidth * size / 100;
 
         mOuterWheelRadius = size / 2 - mOuterPadding;
@@ -235,7 +237,7 @@ public class ColorPickerView extends View {
         int colorCount = 12;
         int colorAngleStep = 360 / 12;
         int colors[] = new int[colorCount + 1];
-        float hsv[] = new float[] { 0f, 1f, 1f };
+        float hsv[] = new float[]{0f, 1f, 1f};
         for (int i = 0; i < colors.length; i++) {
             hsv[0] = (i * colorAngleStep + 180) % 360;
             colors[i] = Color.HSVToColor(hsv);
@@ -290,8 +292,7 @@ public class ColorPickerView extends View {
                     mIsSlidingValue = true;
 
                     invalidate();
-                }
-                else if (d <= mColorWheelRadius) {
+                } else if (d <= mColorWheelRadius) {
                     mColorHSV[0] = (float) (Math.toDegrees(Math.atan2(dy, dx)) + 180f);
                     mColorHSV[1] = Math.max(0f, Math.min(1f, (float) (d / mColorWheelRadius)));
 
@@ -312,9 +313,5 @@ public class ColorPickerView extends View {
 
     public void setOnChangeColor(OnChangeColorListener listener) {
         this.mOnChangeColorListener = listener;
-    }
-
-    public interface OnChangeColorListener {
-        void onChangeColor(int rgb);
     }
 }

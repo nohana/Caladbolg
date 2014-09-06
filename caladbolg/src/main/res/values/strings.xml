@@ -8,7 +8,8 @@
     <string name="dialog_positive_btn">OK</string>
     <string name="dialog_negative_btn">キャンセル</string>
 
-    <string name="callback_implement_msg">must implement ColorPickerCallback. if you use Caladbolg from Fragment, please use getInstance(Fragment, int).</string>
+    <string name="callback_implement_msg_caladbolg">must implement ColorPickerCallback. if you use Caladbolg from Fragment, please use getInstance(Fragment, int).</string>
+    <string name="callback_implement_msg_caladbolg2">must implement OnChangeColorListener. if you use Caladbolg2 from Fragment, please use getInstance(Fragment).</string>
 
     <string name="color_fmt">#%1$x</string>
     <string name="color_param_fmt">R:%1$03d G:%2$03d B:%3$03d A:%4$03d</string>
