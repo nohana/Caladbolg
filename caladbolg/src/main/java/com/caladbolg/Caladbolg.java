@@ -21,7 +21,6 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
-import com.caladbolg.ColorPickerView.OnChangeColorListener;
 import com.caladbolg.utils.ColorUtils;
 
 public class Caladbolg extends DialogFragment implements OnClickListener,
@@ -52,7 +51,7 @@ public class Caladbolg extends DialogFragment implements OnClickListener,
             mCallback = (ColorPickerCallback) target;
         }
         else {
-            throw new ClassCastException(getActivity().getString(R.string.callback_implement_msg));
+            throw new ClassCastException(getActivity().getString(R.string.callback_implement_msg_caladbolg));
         }
 
     }
@@ -132,7 +131,7 @@ public class Caladbolg extends DialogFragment implements OnClickListener,
 
     public void setColor(int color) {
         mAlpha = Color.alpha(color);
-        mRGB = toRGB(color);
+        mRGB = ColorUtils.rgb(color);
     }
 
     private void setColorToIndicaters(int rgb, int alpha) {

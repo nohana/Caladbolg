@@ -22,6 +22,7 @@ public class SampleListActivity extends ActionBarActivity {
         ArrayAdapter<Item> adapter = new ArrayAdapter<Item>(this, android.R.layout.simple_list_item_1);
         adapter.add(new Item(SampleActivity.class));
         adapter.add(new Item(SampleFragmentActivity.class));
+        adapter.add(new Item(CaliburnSampleActivity.class));
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new OnItemClickListener() {
             @Override
@@ -30,6 +31,8 @@ public class SampleListActivity extends ActionBarActivity {
                 item.startActivity(SampleListActivity.this);
             }
         });
+
+        startActivity(new Intent(this, CaliburnSampleActivity.class));
     }
 
     class Item {
