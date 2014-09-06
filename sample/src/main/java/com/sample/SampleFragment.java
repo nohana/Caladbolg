@@ -35,7 +35,7 @@ public class SampleFragment extends Fragment implements ColorPickerCallback {
             if (mLayout.getBackground() instanceof ColorDrawable) {
                 color = ((ColorDrawable) mLayout.getBackground()).getColor();
             }
-            mCaladbolg = Caladbolg.getInstance(this, color);
+            mCaladbolg = Caladbolg.newInstance(this, color);
             mCaladbolg.show(getFragmentManager(), "caladbolg");
         }
     }
