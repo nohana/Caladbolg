@@ -7,18 +7,18 @@ import android.support.v7.app.*;
 import android.widget.*;
 import com.caladbolg.*;
 
-public class Caladbolg2SampleActivity extends ActionBarActivity implements OnChangeColorListener {
+public class CaliburnSampleActivity extends ActionBarActivity implements OnChangeColorListener {
     private static final String TAG = SampleActivity.class.getSimpleName();
     private static final String SAVED_STATE_BACKGROUND_COLOR = "com.sample.SAVED_STATE_BACKGROUND_COLOR";
 
-    Caladbolg2 mCaladbolg;
+    Caliburn mCaladbolg;
     LinearLayout mLayout;
 
     @SuppressWarnings("ConstantConditions")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getActionBar().setTitle(Caladbolg2SampleActivity.class.getSimpleName());
+        getActionBar().setTitle(CaliburnSampleActivity.class.getSimpleName());
         mLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.activity_caladbolg2_sample, null);
         setContentView(mLayout);
 
@@ -32,7 +32,7 @@ public class Caladbolg2SampleActivity extends ActionBarActivity implements OnCha
             if (mLayout.getBackground() instanceof ColorDrawable) {
                 color = ((ColorDrawable) mLayout.getBackground()).getColor();
             }
-            mCaladbolg = (Caladbolg2) getFragmentManager().findFragmentById(R.id.fragment_caladbolg2);
+            mCaladbolg = (Caliburn) getFragmentManager().findFragmentById(R.id.fragment_caladbolg2);
             mCaladbolg.setColor(color);
         }
     }

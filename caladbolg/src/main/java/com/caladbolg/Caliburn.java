@@ -5,21 +5,21 @@ import android.graphics.*;
 import android.os.*;
 import android.view.*;
 
-public class Caladbolg2 extends Fragment implements OnChangeColorListener {
+public class Caliburn extends Fragment implements OnChangeColorListener {
     private static final int REQUEST_CODE = 100;
-    private static final String STATE_COLOR = "com.caladbolg.Caladbolg2.STATE_COLOR";
+    private static final String STATE_COLOR = "com.caladbolg.Caliburn.STATE_COLOR";
 
     private int mColor = Color.WHITE;
     private OnChangeColorListener mListener;
 
-    public static Caladbolg2 newInstance() {
-        return new Caladbolg2();
+    public static Caliburn newInstance() {
+        return new Caliburn();
     }
 
-    public static Caladbolg2 newInstance(Fragment fragment) {
-        Caladbolg2 caladbolg2 = new Caladbolg2();
-        caladbolg2.setTargetFragment(fragment, REQUEST_CODE);
-        return caladbolg2;
+    public static Caliburn newInstance(Fragment fragment) {
+        Caliburn caliburn = new Caliburn();
+        caliburn.setTargetFragment(fragment, REQUEST_CODE);
+        return caliburn;
     }
 
     @Override
@@ -34,7 +34,7 @@ public class Caladbolg2 extends Fragment implements OnChangeColorListener {
             mListener = (OnChangeColorListener) target;
         }
         else {
-            throw new ClassCastException(getActivity().getString(R.string.callback_implement_msg_caladbolg2));
+            throw new ClassCastException(getActivity().getString(R.string.callback_implement_msg_caliburn));
         }
     }
 
@@ -52,7 +52,7 @@ public class Caladbolg2 extends Fragment implements OnChangeColorListener {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_caladbolg2, null);
+        return inflater.inflate(R.layout.fragment_caliburn, null);
     }
 
     @SuppressWarnings("ConstantConditions")
