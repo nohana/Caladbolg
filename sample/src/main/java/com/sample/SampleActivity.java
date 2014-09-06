@@ -42,7 +42,7 @@ public class SampleActivity extends ActionBarActivity implements ColorPickerCall
             if (mLayout.getBackground() instanceof ColorDrawable) {
                 color = ((ColorDrawable) mLayout.getBackground()).getColor();
             }
-            mCaladbolg = Caladbolg.getInstance(color);
+            mCaladbolg = Caladbolg.newInstance(color);
             mCaladbolg.show(getSupportFragmentManager(), "caladbolg");
         }
     }
