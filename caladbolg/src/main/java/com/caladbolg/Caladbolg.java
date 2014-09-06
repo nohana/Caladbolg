@@ -129,6 +129,11 @@ public class Caladbolg extends DialogFragment implements OnClickListener,
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {}
 
+    public void setColor(int color) {
+        mAlpha = Color.alpha(color);
+        mRGB = toRGB(color);
+    }
+
     private void setColorToIndicaters(int rgb, int alpha) {
         mColorIndicaterView.setBackgroundColor(toARGB(rgb, alpha));
         mColorCodeEdit.setText(getActivity().getString(R.string.color_fmt, toARGB(rgb, alpha)));
