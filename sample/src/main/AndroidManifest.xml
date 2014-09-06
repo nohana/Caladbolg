@@ -16,6 +16,10 @@
             android:label="@string/app_name" >
         </activity>
         <activity
+            android:name=".Caladbolg2SampleActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
             android:name=".SampleListActivity"
             android:label="@string/app_name" >
             <intent-filter>
